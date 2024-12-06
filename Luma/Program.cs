@@ -25,7 +25,7 @@ else
     app.UseHsts();
 }
 
-//asdadsatfy
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
