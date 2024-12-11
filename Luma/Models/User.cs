@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations.Schema;
+using Luma.Models;
 
 namespace Luma.Models
 {
@@ -10,8 +11,8 @@ namespace Luma.Models
         // un user poate posta mai multe comentarii
         public virtual ICollection<Comment>? Comments { get; set; }
 
-        // un user poate posta mai multe articole
-        //public virtual ICollection<Project>? Projects { get; set; }
+        // un user poate crea mai multe proiecte
+        public virtual ICollection<Project>? Projects { get; set; }
 
 
         // atribute suplimentare adaugate pentru user

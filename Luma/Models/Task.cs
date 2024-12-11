@@ -2,7 +2,7 @@
 
 namespace Luma.Models
 {
-    public class Tasks
+    public class Task
     {
         [Key]
         public int Id { get; set; }
