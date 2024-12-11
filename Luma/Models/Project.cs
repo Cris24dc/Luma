@@ -6,10 +6,8 @@ namespace Luma.Models
     {
         [Key]
         public int Id { get; set; }
-        public string Project_Name { get; set; }
-
-
-        public string UserId { get; set; }
-        public virtual User User { get; set; }
+        public string? Project_Name { get; set; }
+        public virtual ICollection<User>? Users { get; set; }
+        public virtual ICollection<Task>? Tasks { get; set; }
     }
 }

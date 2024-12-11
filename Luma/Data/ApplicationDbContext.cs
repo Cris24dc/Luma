@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Luma.Models;
-using Microsoft.CodeAnalysis;
+using ProjectModel = Luma.Models.Project;
+using TaskModel = Luma.Models.Task;
 
 namespace Luma.Data
 {
@@ -13,10 +14,8 @@ namespace Luma.Data
         {
         }
 
-
-
-        public DbSet<Project> Projects { get; set; }
-
+        public DbSet<TaskModel> Tasks { get; set; }
+        public DbSet<ProjectModel> Projects { get; set; }
         public DbSet<Comment> Comments { get; set; }
     }
 }
