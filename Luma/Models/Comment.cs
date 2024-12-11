@@ -13,7 +13,7 @@ namespace Luma.Models
         public DateTime Date { get; set; }
 
         // cheie externa (FK) - un comentariu apartine unui articol
-        //public int ProjectId { get; set; }
+        public int ProjectId { get; set; }
 
         // PASUL 6: useri si roluri 
         // cheie externa (FK) - un comentariu este postat de catre un user

@@ -13,6 +13,9 @@ namespace Luma.Models
         // un user poate crea mai multe proiecte
         public virtual ICollection<Project>? Projects { get; set; }
 
+        //un user poate crea mai multe taskuri  
+        public virtual ICollection<Task>? Tasks { get; set; }
+
 
         // atribute suplimentare adaugate pentru user
         //public string? FirstName { get; set; }
