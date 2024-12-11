@@ -23,7 +23,6 @@ namespace Luma.Models
                     return; // baza de date contine deja roluri
                 }
 
-
                 // CREAREA ROLURILOR IN BD
                 // daca nu contine roluri, acestea se vor crea
 
