@@ -1,0 +1,41 @@
+﻿
+
+
+<br />
+<h2 class="text-center">Projects</h2>
+
+<br />
+
+@if(ViewBag.Message != null)
+{
+    <div class="alert-success p-3 rounded-3 text-center mb-5 @ViewBag.Alert">
+        @ViewBag.Message
+    </div>
+}
+
+<br />
+
+
+
+@foreach (var projectViewModel in ViewBag.ProjectViewModels)
+{
+    <div>
+        <h3>@projectViewModel.Project.Project_Name</h3>
+        @if (!string.IsNullOrEmpty(projectViewModel.OrganizerUsername))
+        {
+            <p>Organized by: @projectViewModel.OrganizerUsername</p> <!-- Display the organizer's username -->
+        }
+        else
+        {
+            <p>Organizer not found.</p>
+        }
+    </div>
+}
+
+<div class="d-flex justify-content-center">
+
+    <br />
+    <a class="btn btn-outline-success" href="/Projects/New">New Project</a>
+    <br />
+
+</div>

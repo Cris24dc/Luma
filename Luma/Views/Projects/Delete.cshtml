@@ -1,0 +1,19 @@
+﻿@model Luma.Models.Project
+
+<h2 class="text-center mt-5">Delete Project</h2>
+
+<br />
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-3">
+
+            <form method="post" asp-action="Delete" asp-controller="Projects" asp-route-id="@Model.Id">
+
+                <button class="btn btn-sm btn-success" type="submit">Delete Project</button>
+                
+            </form>
+        </div>
+    </div>
+</div>
+

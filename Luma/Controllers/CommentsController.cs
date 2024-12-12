@@ -29,7 +29,7 @@ namespace Luma.Controllers
 
 
     //    [HttpPost]
-    //    //[Authorize(Roles = "Membru,Organizator,Admin")]
+    //    [Authorize(Roles = "Member,Organizator,Admin")]
     //    public IActionResult Delete(int id)
     //    {
     //        Comment comment = db.Comments.Find(id);
@@ -50,7 +50,7 @@ namespace Luma.Controllers
 
     //    }
 
-    //    //[Authorize(Roles = "Membru,Organizator")]
+    //    //[Authorize(Roles = "Member,Organizator")]
     //    public IActionResult Edit(int id)
     //    {
     //        Comment comment = db.Comments.Find(id);
@@ -68,7 +68,7 @@ namespace Luma.Controllers
     //    }
 
     //    [HttpPost]
-    //    //[Authorize(Roles = "Membru,Organizator")]
+    //    //[Authorize(Roles = "Member,Organizator")]
     //    public IActionResult Edit(int id, Comment requestComment)
     //    {
     //        Comment comment = db.Comments.Find(id);
