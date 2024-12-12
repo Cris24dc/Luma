@@ -19,16 +19,18 @@
 
 @foreach (var projectViewModel in ViewBag.ProjectViewModels)
 {
-    <div>
-        <h3>@projectViewModel.Project.Project_Name</h3>
-        @if (!string.IsNullOrEmpty(projectViewModel.OrganizerUsername))
-        {
-            <p>Organized by: @projectViewModel.OrganizerUsername</p> <!-- Display the organizer's username -->
-        }
-        else
-        {
-            <p>Organizer not found.</p>
-        }
+    <div class="card mb-2" style="cursor: pointer;" onclick="location.href='@Url.Action("Index", "Tasks", new { ProjectId = projectViewModel.Project.Id })'">
+        <div>
+            <h3>@projectViewModel.Project.Project_Name</h3>
+            @if (!string.IsNullOrEmpty(projectViewModel.OrganizerUsername))
+            {
+                <p>Organized by: @projectViewModel.OrganizerUsername</p>
+            }
+            else
+            {
+                <p>Organizer not found.</p>
+            }
+        </div>
     </div>
 }
 

@@ -43,7 +43,7 @@ namespace Luma.Controllers
                 {
                     Project = project,
                     OrganizerUsername = project.Users
-            .FirstOrDefault(u => u.Id == project.Organizer).UserName // Find the username of the organizer
+            .FirstOrDefault(u => u.Id == project.Organizer).UserName 
                 }).ToList();
 
                 ViewBag.ProjectViewModels = projectViewModels;
