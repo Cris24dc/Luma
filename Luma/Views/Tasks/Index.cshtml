@@ -1,0 +1,73 @@
+﻿@model Luma.Models.Project
+
+<div class="card mb-4">
+    <h1>@Model.Project_Name</h1>
+    <p>Organizer: @ViewBag.OrganizerName</p>
+
+    @if (ViewBag.ShowButtons)
+    {
+        <div class="d-flex flex-row justify-content-between mb-3">
+            <a class="btn btn-success" asp-controller="Projects" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+
+            <form method="post" asp-controller="Projects" asp-action="Delete" asp-route-id="@Model.Id">
+                <button class="btn btn-danger" type="submit">Delete</button>
+            </form>
+        </div>
+    }
+</div>
+
+<div class="row">
+    <!-- To do Column -->
+    <div class="col-md-4">
+        <h2 class="d-flex justify-content-between align-items-center">
+            To do
+            <a class="btn btn-primary btn-sm" asp-controller="Tasks" asp-action="New" asp-route-projectId="@Model.Id" asp-route-status="To do">Add</a>
+        </h2>
+        @foreach (var task in ViewBag.ToDoTasks)
+        {
+            <div class="card mb-2" style="cursor: pointer;" onclick="location.href='@Url.Action("Show", "Tasks", new { id = task.Id })'">
+                <div class="card-body">
+                    <h5>@task.Title</h5>
+                    <p>@task.Description</p>
+                    <small>Start: @task.Start_Date, End: @task.End_Date</small>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- In progress Column -->
+    <div class="col-md-4">
+        <h2 class="d-flex justify-content-between align-items-center">
+            In progress
+            <a class="btn btn-primary btn-sm" asp-controller="Tasks" asp-action="New" asp-route-projectId="@Model.Id" asp-route-status="In progress">Add</a>
+        </h2>
+        @foreach (var task in ViewBag.InProgressTasks)
+        {
+            <div class="card mb-2" style="cursor: pointer;" onclick="location.href='@Url.Action("Show", "Tasks", new { id = task.Id })'">
+                <div class="card-body">
+                    <h5>@task.Title</h5>
+                    <p>@task.Description</p>
+                    <small>Start: @task.Start_Date, End: @task.End_Date</small>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Done Column -->
+    <div class="col-md-4">
+        <h2 class="d-flex justify-content-between align-items-center">
+            Done
+            <a class="btn btn-primary btn-sm" asp-controller="Tasks" asp-action="New" asp-route-projectId="@Model.Id" asp-route-status="Done">Add</a>
+        </h2>
+        @foreach (var task in ViewBag.DoneTasks)
+        {
+            <div class="card mb-2" style="cursor: pointer;" onclick="location.href='@Url.Action("Show", "Tasks", new { id = task.Id })'">
+                <div class="card-body">
+                    <h5>@task.Title</h5>
+                    <p>@task.Description</p>
+                    <small>Start: @task.Start_Date, End: @task.End_Date</small>
+                </div>
+            </div>
+        }
+    </div>
+</div>
