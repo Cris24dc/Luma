@@ -386,6 +386,7 @@ Migrations/
 .vs/
 
 # Configurations
+appsettings.json
 appsettings.Development.json
 
 # NuGet Packages
