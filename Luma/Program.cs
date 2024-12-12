@@ -43,11 +43,9 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-
-
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{ProjectId?}");
+    pattern: "{controller=Projects}/{action=Index}/{ProjectId?}");
 app.MapRazorPages();
 
 app.Run();

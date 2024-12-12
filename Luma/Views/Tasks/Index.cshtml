@@ -21,7 +21,10 @@
     <div class="col-md-4">
         <h2 class="d-flex justify-content-between align-items-center">
             To do
-            <a class="btn btn-primary btn-sm" asp-controller="Tasks" asp-action="New" asp-route-projectId="@Model.Id" asp-route-status="To do">Add</a>
+            @if (ViewBag.ShowButtons)
+            {
+                <a class="btn btn-primary btn-sm" asp-controller="Tasks" asp-action="New" asp-route-projectId="@Model.Id" asp-route-status="To do">Add</a>
+            }
         </h2>
         @foreach (var task in ViewBag.ToDoTasks)
         {
@@ -39,7 +42,10 @@
     <div class="col-md-4">
         <h2 class="d-flex justify-content-between align-items-center">
             In progress
-            <a class="btn btn-primary btn-sm" asp-controller="Tasks" asp-action="New" asp-route-projectId="@Model.Id" asp-route-status="In progress">Add</a>
+            @if (ViewBag.ShowButtons)
+            {
+                <a class="btn btn-primary btn-sm" asp-controller="Tasks" asp-action="New" asp-route-projectId="@Model.Id" asp-route-status="In progress">Add</a>
+            }
         </h2>
         @foreach (var task in ViewBag.InProgressTasks)
         {
@@ -57,7 +63,10 @@
     <div class="col-md-4">
         <h2 class="d-flex justify-content-between align-items-center">
             Done
-            <a class="btn btn-primary btn-sm" asp-controller="Tasks" asp-action="New" asp-route-projectId="@Model.Id" asp-route-status="Done">Add</a>
+            @if (ViewBag.ShowButtons)
+            {
+                <a class="btn btn-primary btn-sm" asp-controller="Tasks" asp-action="New" asp-route-projectId="@Model.Id" asp-route-status="Done">Add</a>
+            }
         </h2>
         @foreach (var task in ViewBag.DoneTasks)
         {

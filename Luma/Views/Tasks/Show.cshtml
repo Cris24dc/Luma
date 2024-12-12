@@ -26,4 +26,14 @@
     </div>
 }
 
-<a class="btn btn-primary mt-3" asp-controller="Projects" asp-action="Index" asp-route-id="@Model.ProjectId">Back to Project</a>
+<br />
+
+<form asp-action="UpdateStatus" asp-route-id="@Model.Id" method="post" style="display:inline;">
+    <button type="submit" name="status" value="To do" class="btn btn-secondary">To do</button>
+    <button type="submit" name="status" value="In progress" class="btn btn-warning">In progress</button>
+    <button type="submit" name="status" value="Done" class="btn btn-success">Done</button>
+</form>
+
+<br />
+
+<a class="btn btn-primary mt-3" asp-controller="Tasks" asp-action="Index" asp-route-projectId="@Model.ProjectId">Back to Project</a>

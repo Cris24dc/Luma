@@ -92,7 +92,7 @@ namespace Luma.Controllers
             {
                 db.Tasks.Add(task);
                 db.SaveChanges();
-                return RedirectToAction("Index", "Tasks");
+                return RedirectToAction("Index", "Tasks", new { projectId = task.ProjectId }); // Redirect to the project page
             }
 
             return View(task);
@@ -137,11 +137,12 @@ namespace Luma.Controllers
             {
                 db.Tasks.Update(task);
                 db.SaveChanges();
-                return RedirectToAction("Index", "Tasks");
+                return RedirectToAction("Index", "Tasks", new { projectId = task.ProjectId }); // Redirect to the project page
             }
 
             return View(task);
         }
+
 
         // POST: Tasks/Delete/5
         [HttpPost]
@@ -155,10 +156,11 @@ namespace Luma.Controllers
                 return NotFound();
             }
 
+            var projectId = task.ProjectId; // Get the projectId of the task to redirect to the project page
             db.Tasks.Remove(task);
             db.SaveChanges();
 
-            return RedirectToAction("Index", "Tasks");
+            return RedirectToAction("Index", "Tasks", new { projectId = projectId }); // Redirect to the project page
         }
 
         private void SetAccessRights(Project project)
@@ -171,5 +173,25 @@ namespace Luma.Controllers
                 ViewBag.ShowButtons = true;
             }
         }
+
+        // POST: Tasks/UpdateStatus/5
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateStatus(int id, string status)
+        {
+            var task = db.Tasks.Find(id);
+            if (task == null)
+            {
+                return NotFound();
+            }
+
+            task.Status = status;
+            db.Tasks.Update(task);
+            db.SaveChanges();
+
+            return RedirectToAction("Show", new { id = task.Id });
+        }
+
     }
 }
