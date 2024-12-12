@@ -26,7 +26,25 @@ namespace Luma.Controllers
             _roleManager = roleManager;
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Member")]
 
+        public IActionResult New(Comment comment)
+        {
+            comment.Date = DateTime.Now;
+
+            if (ModelState.IsValid)
+            {
+                db.Comments.Add(comment);
+                comment.UserId = _userManager.GetUserId(User);
+                db.SaveChanges();
+                return Redirect("/Tasks/Show/" + comment.TaskId);
+            }
+            else
+            {
+                return Redirect("/Tasks/Show/" + comment.TaskId);
+            }
+        }
 
         [HttpPost]
         [Authorize(Roles = "Member,Admin")]

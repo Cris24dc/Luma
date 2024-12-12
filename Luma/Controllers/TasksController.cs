@@ -111,6 +111,12 @@ namespace Luma.Controllers
             var currentUserId = _userManager.GetUserId(User);
             ViewBag.ShowButtons = task.Project.Organizer == currentUserId || User.IsInRole("Admin");
 
+
+            var comments = from text in db.Comments
+                           select text;
+
+            ViewBag.Comments = comments;
+
             return View(task);
         }
 
