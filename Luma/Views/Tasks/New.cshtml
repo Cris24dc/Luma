@@ -30,9 +30,8 @@
         <span asp-validation-for="End_Date" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary mt-3">Add Task</button>
+    <div class="d-flex justify-content-between">
+        <button type="submit" class="btn btn-primary mt-3">Add Task</button>
+        <a href="@Url.Action("Index", "Tasks", new { projectId = Model.ProjectId })" class="btn btn-secondary mt-3">Cancel</a>
+    </div>
 </form>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using TaskModel = Luma.Models.Task;
 
 namespace Luma.Controllers
@@ -29,17 +30,34 @@ namespace Luma.Controllers
         [Authorize(Roles = "Member, Admin")]
         public IActionResult Index(int projectId)
         {
-            // Project data
-            var project = db.Projects.Include(p => p.Tasks).FirstOrDefault(p => p.Id == projectId);
+            var project = db.Projects
+                .Include(p => p.Users)
+                .Include(p => p.Tasks)
+                .FirstOrDefault(p => p.Id == projectId);
 
             if (project == null)
             {
                 return NotFound();
             }
 
-            // Organizer data
+            // Get current user id
+            var currentUserId = _userManager.GetUserId(User);
+
+            // Verify if user is admin
+            if (!User.IsInRole("Admin"))
+            {
+                // Verify if user is in the current project
+                if (!project.Users.Any(u => u.Id == currentUserId))
+                {
+                    // Deny the access
+                    return Forbid();
+                }
+            }
+
+            // Organizer user
             var organizer = _userManager.Users.FirstOrDefault(u => u.Id == project.Organizer);
 
+            // Select organizer username
             if (organizer != null)
             {
                 ViewBag.OrganizerName = $"{organizer.UserName}";
@@ -49,7 +67,7 @@ namespace Luma.Controllers
                 ViewBag.OrganizerName = "Unknown Organizer";
             }
 
-            // Rights for CRUD
+            // CRUD for organizer
             SetAccessRights(project);
 
             // Tasks by Status
@@ -75,8 +93,8 @@ namespace Luma.Controllers
             {
                 ProjectId = projectId,
                 Status = status,
-                Start_Date = DateTime.Now, // Data curentă
-                End_Date = DateTime.Now.AddDays(1) // Data implicită pentru End_Date
+                Start_Date = DateTime.Now,
+                End_Date = DateTime.Now.AddDays(1)
             };
 
             return View(task);
@@ -92,13 +110,13 @@ namespace Luma.Controllers
             {
                 db.Tasks.Add(task);
                 db.SaveChanges();
-                return RedirectToAction("Index", "Tasks", new { projectId = task.ProjectId }); // Redirect to the project page
+                return RedirectToAction("Index", "Tasks", new { projectId = task.ProjectId });
             }
 
             return View(task);
         }
 
-        // GET: Tasks/Show/5
+        // GET: Show Action
         [Authorize]
         public IActionResult Show(int id)
         {
@@ -109,12 +127,14 @@ namespace Luma.Controllers
             }
 
             var currentUserId = _userManager.GetUserId(User);
+
+            // Verify if is Organizer or Admin for CRUD
             ViewBag.ShowButtons = task.Project.Organizer == currentUserId || User.IsInRole("Admin");
 
             return View(task);
         }
 
-        // GET: Tasks/Edit/5
+        // GET: Edit Action
         [Authorize]
         public IActionResult Edit(int id)
         {
@@ -127,7 +147,7 @@ namespace Luma.Controllers
             return View(task);
         }
 
-        // POST: Tasks/Edit/5
+        // POST: Edit Action
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
@@ -137,14 +157,14 @@ namespace Luma.Controllers
             {
                 db.Tasks.Update(task);
                 db.SaveChanges();
-                return RedirectToAction("Index", "Tasks", new { projectId = task.ProjectId }); // Redirect to the project page
+                // Redirect to the project page
+                return RedirectToAction("Index", "Tasks", new { projectId = task.ProjectId });
             }
 
             return View(task);
         }
 
-
-        // POST: Tasks/Delete/5
+        // POST: Delete Action
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
@@ -156,13 +176,16 @@ namespace Luma.Controllers
                 return NotFound();
             }
 
-            var projectId = task.ProjectId; // Get the projectId of the task to redirect to the project page
+            // Get the projectId of the task
+            var projectId = task.ProjectId;
             db.Tasks.Remove(task);
             db.SaveChanges();
 
-            return RedirectToAction("Index", "Tasks", new { projectId = projectId }); // Redirect to the project page
+            // Redirect to the project page
+            return RedirectToAction("Index", "Tasks", new { projectId = projectId });
         }
 
+        // Se if it has CRUD rights
         private void SetAccessRights(Project project)
         {
             ViewBag.ShowButtons = false;
@@ -174,7 +197,7 @@ namespace Luma.Controllers
             }
         }
 
-        // POST: Tasks/UpdateStatus/5
+        // POST: UpdateStatus
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]

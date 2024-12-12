@@ -14,34 +14,22 @@ namespace Luma.Models
             <DbContextOptions<ApplicationDbContext>>()))
 
             {
-                // Verificam daca in baza de date exista cel putin un rol
-                // insemnand ca a fost rulat codul
-                // De aceea facem return pentru a nu insera rolurile inca o data
-                // Acesta metoda trebuie sa se execute o singura data
                 if (context.Roles.Any())
                 {
-                    return; // baza de date contine deja roluri
+                    return;
                 }
-
-                // CREAREA ROLURILOR IN BD
-                // daca nu contine roluri, acestea se vor crea
 
                 context.Roles.AddRange(
                 new IdentityRole { Id = "7161a6d9-efd8-4f60-ae91-e85a3bd21270", Name = "Admin", NormalizedName = "Admin".ToUpper() },
                 new IdentityRole { Id = "7161a6d9-efd8-4f60-ae91-e85a3bd21271", Name = "Member", NormalizedName = "Member".ToUpper() }
                 );
 
-                // o noua instanta pe care o vom utiliza pentru crearea parolelor utilizatorilor
-                // parolele sunt de tip hash
-
                 var hasher = new PasswordHasher<User>();
 
-                // CREAREA USERILOR IN BD
-                // Se creeaza cate un user pentru fiecare rol
                 context.Users.AddRange(
                 new User
                 {
-                    Id = "8e445865-a24d-4543-a6c6-9443d048cdb0", // primary key
+                    Id = "8e445865-a24d-4543-a6c6-9443d048cdb0",
                     UserName = "admin@test.com",
                     EmailConfirmed = true,
                     NormalizedEmail = "ADMIN@TEST.COM",
@@ -52,7 +40,7 @@ namespace Luma.Models
 
                 new User
                 {
-                    Id = "8e445865-a24d-4543-a6c6-9443d048cdb1", // primary key
+                    Id = "8e445865-a24d-4543-a6c6-9443d048cdb1",
                     UserName = "member@test.com",
                     EmailConfirmed = true,
                     NormalizedEmail = "MEMBER@TEST.COM",
@@ -61,8 +49,6 @@ namespace Luma.Models
                     PasswordHash = hasher.HashPassword(null, "Member1!")
                 });
 
-
-                // ASOCIEREA USER-ROLE
                 context.UserRoles.AddRange(
                 new IdentityUserRole<string>
                 {
