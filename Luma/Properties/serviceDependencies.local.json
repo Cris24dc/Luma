@@ -1,6 +1,10 @@
 {
   "dependencies": {
     "mssql1": {
+<<<<<<< Updated upstream
+=======
+      "serviceConnectorResourceId": "",
+>>>>>>> Stashed changes
       "secretStore": null,
       "resourceId": null,
       "type": "mssql.local",
