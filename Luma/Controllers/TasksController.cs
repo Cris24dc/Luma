@@ -3,9 +3,11 @@ using Luma.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using TaskModel = Luma.Models.Task;
+using ProjectModel = Luma.Models.Project;
 
 namespace Luma.Controllers
 {
@@ -118,7 +120,12 @@ namespace Luma.Controllers
         [Authorize]
         public IActionResult Show(int id)
         {
-            var task = db.Tasks.Include(t => t.Project).FirstOrDefault(t => t.Id == id);
+            // Include the Users in the query
+            var task = db.Tasks
+                         .Include(t => t.Project)
+                         .Include(t => t.Users) // Ensure Users are loaded
+                         .FirstOrDefault(t => t.Id == id);
+
             if (task == null)
             {
                 return NotFound();
@@ -129,8 +136,38 @@ namespace Luma.Controllers
             // Verify if is Organizer or Admin for CRUD
             ViewBag.ShowButtons = task.Project.Organizer == currentUserId || User.IsInRole("Admin");
 
+            // Fetch the admin role ID
+            var adminRoleId = db.Roles.FirstOrDefault(r => r.Name == "Admin")?.Id;
+            if (adminRoleId == null)
+            {
+                return NotFound("Admin role doesn't exist.");
+            }
+
+            // Get the list of users who are not Admins and not the current user
+            var adminUserIds = db.UserRoles
+                                 .Where(ur => ur.RoleId == adminRoleId)
+                                 .Select(ur => ur.UserId)
+                                 .ToList();
+
+            var users = db.Users
+                          .Where(u => !adminUserIds.Contains(u.Id) && u.Id != currentUserId)
+                          .ToList();
+
+            // Prepare the data that includes whether each user is assigned to the task
+            var usersWithinTask = users.Select(user => new
+            {
+                User = user,
+                IsAssignedToTask = task.Users.Contains(user) // Ensure this won't throw an exception
+            }).ToList();
+
+            // Pass the users, usersWithProjectInfo, and projectId to the view
+            ViewBag.Users = users;
+            ViewBag.UsersWithinTask = usersWithinTask;
+            ViewBag.ProjectId = task.Id;
+
             return View(task);
         }
+
 
         // GET: Edit Action
         [Authorize]
@@ -183,8 +220,15 @@ namespace Luma.Controllers
             return RedirectToAction("Index", "Tasks", new { projectId = projectId });
         }
 
+        // GET: AllUsers
+        [Authorize(Roles = "Member, Admin")]
+        public IActionResult AllUsers(int projectId)
+        {
+            return View();
+        }
+
         // See if it has CRUD rights
-        private void SetAccessRights(Project project)
+        private void SetAccessRights(ProjectModel project)
         {
             ViewBag.ShowButtons = false;
 

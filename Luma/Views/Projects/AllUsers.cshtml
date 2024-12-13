@@ -3,23 +3,37 @@
 @{
     ViewBag.Title = "Manage Users - Luma";
     var users = ViewBag.Users as List<User>;
+    var usersWithProjectInfo = ViewBag.UsersWithProjectInfo;
+    var projectId = ViewBag.ProjectId;
 }
 
 <h1>Manage Users: </h1>
 
-@if (users == null || !users.Any())
-{
-    <p>No users to list.</p>
-}
-else
-{
-    @foreach (var user in users)
+<div class="list-group">
+    @foreach (var userInfo in usersWithProjectInfo)
     {
-        <div class="card mb-2 d-flex flex-row justify-content-between mb-3">
-            <p>@user.Email</p>
+        <div class="card mb-2 d-flex flex-row justify-content-between">
+            <div>
+                <p>@userInfo.User.Email</p>
+            </div>
+
+            <div>
+                @if (userInfo.IsAssignedToProject)
+                {
+                    <form method="post" asp-action="RemoveUserFromProject" asp-route-projectId="@projectId" asp-route-userId="@userInfo.User.Id">
+                        <button type="submit" class="btn btn-danger">Remove</button>
+                    </form>
+                }
+                else
+                {
+                    <form method="post" asp-action="AddUserToProject" asp-route-projectId="@projectId" asp-route-userId="@userInfo.User.Id">
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </form>
+                }
+            </div>
         </div>
     }
-}
+</div>
 
 <br />
-<a class="btn btn-primary mt-3" asp-controller="Tasks" asp-action="Index" asp-route-projectId="@ViewBag.ProjectId">Back to Project</a>
+<a class="btn btn-primary mt-3" asp-controller="Tasks" asp-action="Index" asp-route-projectId="@projectId">Back to Project</a>

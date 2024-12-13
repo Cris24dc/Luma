@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Task Details";
+    var usersWithinTask = ViewBag.UsersWithinTask;
 }
 
 <div class="card">
@@ -13,21 +14,36 @@
         <p>End Date: @Model.End_Date.ToShortDateString()</p>
         <p>Project: @Model.Project?.Project_Name</p>
     </div>
+    @if (ViewBag.ShowButtons)
+    {
+        <div class="mt-3">
+            <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+
+            <form asp-action="Delete" asp-route-id="@Model.Id" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    }
 </div>
 
-@if (ViewBag.ShowButtons)
-{
-    <div class="mt-3">
-        <a class="btn btn-success" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+<h3>Members: </h3>
+<div class="list-group">
+    @foreach (var userInfo in usersWithinTask)
+    {
+        <div>
+            @if (userInfo.IsAssignedToTask)
+            {
+                <p>@userInfo.User.Email</p>
+            }
+        </div>
+    }
+    @if (ViewBag.ShowButtons)
+    {
+        <a class="btn btn-success" asp-controller="Tasks" asp-action="AllUsers" asp-route-projectId="@Model.Id">Manage Members</a>
+    }
+</div>
 
-        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" style="display:inline;">
-            <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-    </div>
-}
-
-<br />
-
+<h3>Status: </h3>
 <form asp-action="UpdateStatus" asp-route-id="@Model.Id" method="post" style="display:inline;">
     <button type="submit" name="status" value="To do" class="btn btn-secondary">To do</button>
     <button type="submit" name="status" value="In progress" class="btn btn-warning">In progress</button>

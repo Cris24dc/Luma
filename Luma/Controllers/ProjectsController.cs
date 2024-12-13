@@ -195,25 +195,104 @@ namespace Luma.Controllers
         [Authorize(Roles = "Member, Admin")]
         public IActionResult AllUsers(int projectId)
         {
+            // Fetch the admin role ID
             var adminRoleId = db.Roles.FirstOrDefault(r => r.Name == "Admin")?.Id;
             if (adminRoleId == null)
             {
-                return NotFound("Rolul Admin nu există.");
+                return NotFound("Admin role doesn't exist.");
             }
 
+            // Get the current user ID
+            var currentUserId = _userManager.GetUserId(User);
+
+            // Get the list of users who are not Admins and not the current user
             var adminUserIds = db.UserRoles
                                  .Where(ur => ur.RoleId == adminRoleId)
                                  .Select(ur => ur.UserId)
                                  .ToList();
 
             var users = db.Users
-                          .Where(u => !adminUserIds.Contains(u.Id))
+                          .Where(u => !adminUserIds.Contains(u.Id) && u.Id != currentUserId)
                           .ToList();
 
+            // Fetch the project by ID to check the users already associated with it
+            var project = db.Projects.Include(p => p.Users).FirstOrDefault(p => p.Id == projectId);
+            if (project == null)
+            {
+                return NotFound("Project not found.");
+            }
+
+            // Prepare the data that includes whether each user is assigned to the project
+            var usersWithProjectInfo = users.Select(user => new
+            {
+                User = user,
+                IsAssignedToProject = project.Users.Contains(user)
+            }).ToList();
+
+            // Pass the users, usersWithProjectInfo, and projectId to the view
             ViewBag.Users = users;
+            ViewBag.UsersWithProjectInfo = usersWithProjectInfo;
             ViewBag.ProjectId = projectId;
+
             return View();
         }
+
+        // POST: Add User to Project
+        [HttpPost]
+        [Authorize(Roles = "Member, Admin")]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddUserToProject(int projectId, string userId)
+        {
+            var project = db.Projects.Include(p => p.Users).FirstOrDefault(p => p.Id == projectId);
+            if (project == null)
+            {
+                return NotFound("Project not found.");
+            }
+
+            var user = db.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            // Add the user to the project
+            if (!project.Users.Contains(user))
+            {
+                project.Users.Add(user);
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("AllUsers", new { projectId = projectId });
+        }
+
+        // POST: Remove User from Project
+        [HttpPost]
+        [Authorize(Roles = "Member, Admin")]
+        [ValidateAntiForgeryToken]
+        public IActionResult RemoveUserFromProject(int projectId, string userId)
+        {
+            var project = db.Projects.Include(p => p.Users).FirstOrDefault(p => p.Id == projectId);
+            if (project == null)
+            {
+                return NotFound("Project not found.");
+            }
+
+            var user = db.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            // Remove the user from the project
+            if (project.Users.Contains(user))
+            {
+                project.Users.Remove(user);
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("AllUsers", new { projectId = projectId });
+        }
+
 
         // See if it has CRUD rights
         private void SetAccessRights(ProjectModel project)

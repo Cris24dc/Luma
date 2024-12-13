@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-Luma-8f6ac6dc-7959-4400-90e8-3f194476ab48</UserSecretsId>
+	<EnableHotReload>true</EnableHotReload>
   </PropertyGroup>
 
   <ItemGroup>
