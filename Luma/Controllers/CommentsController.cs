@@ -26,7 +26,30 @@ namespace Luma.Controllers
             _roleManager = roleManager;
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Member")]
 
+        public IActionResult New(Comment comment)
+        {
+
+           
+            comment.Date = DateTime.Now;
+
+            if (ModelState.IsValid)
+            {
+                db.Comments.Add(comment);
+                comment.UserId = _userManager.GetUserId(User);
+                db.SaveChanges();
+                return RedirectToAction("Show", "Tasks", new { id = comment.TaskId });
+            }
+            else
+            {
+                    TempData["message"] = "Comment is null.";
+                    TempData["messageType"] = "alert-danger";
+                    return RedirectToAction("Index", "Projects");
+
+            }
+        }
 
         [HttpPost]
         [Authorize(Roles = "Member,Admin")]
@@ -38,14 +61,14 @@ namespace Luma.Controllers
             {
                 db.Comments.Remove(comment);
                 db.SaveChanges();
-                return Redirect("/Tasks/Index/" + comment.TaskId);
+                return RedirectToAction("Show", "Tasks", new { id = comment.TaskId });
 
             }
             else
             {
                 TempData["message"] = "You dont have permission to delete this comment!!!";
                 TempData["messageType"] = "alert-danger";
-                return RedirectToAction("Index", "Tasks");
+                return RedirectToAction("Index", "Tasks", new { id = comment.Task.ProjectId });
             }
 
         }
@@ -68,7 +91,7 @@ namespace Luma.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Member,Organizator")]
+        [Authorize(Roles = "Member")]
         public IActionResult Edit(int id, Comment requestComment)
         {
             Comment comment = db.Comments.Find(id);
@@ -81,7 +104,7 @@ namespace Luma.Controllers
 
                     db.SaveChanges();
 
-                    return Redirect("/Tasks/Index" + comment.TaskId);
+                    return RedirectToAction("Show", "Tasks", new { id = comment.TaskId });
                 }
                 else
                 {
@@ -92,7 +115,7 @@ namespace Luma.Controllers
             {
                 TempData["message"] = "You dont have permission to edit this comment!!!";
                 TempData["messageType"] = "alert-danger";
-                return RedirectToAction("Index", "Tasks");
+                return RedirectToAction("Index", "Tasks", new { id = comment.Task.ProjectId });
             }
         }
     }

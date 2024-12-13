@@ -32,9 +32,9 @@ namespace Luma.Controllers
         {
             if (User.IsInRole("Member"))
             {
-                var projects = from project in db.Projects.Include("Users")
-                           .Where(a => a.Users.Any(b => b.Id == _userManager.GetUserId(User)))
-                               select project;
+
+                var projects =  db.Projects.Include("Users")
+                           .Where(a => a.Users.Any(b => b.Id == _userManager.GetUserId(User)));
 
                 ViewBag.Projects = projects;
 

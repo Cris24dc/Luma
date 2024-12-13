@@ -1,7 +1,7 @@
 ﻿@model Luma.Models.Project
 
 
-<h2 class="text-center mt-5">Adaugare articol</h2>
+<h2 class="text-center mt-5">Add project</h2>
 
 <br />
 
@@ -11,10 +11,14 @@
 
             <form method="post" asp-action="New" asp-controller="Projects">
 
+                <div asp-validation-summary="All" class="text-danger"></div>
+
                 <div class="form-group">
                     <label asp-for="Project_Name" class="form-label">Project Name</label>
                     <br />
                     <input asp-for="Project_Name" class="form-control" />
+
+                    <span asp-validation-for="Project_Name" class="text-danger"></span>
                     <br /><br />
                 </div>
 
@@ -24,32 +28,3 @@
         </div>
     </div>
 </div>
-
-
-@* FORMULARUL FOLOSIND HTML HELPERS
-    Acesta este adaugat doar ca exemplu, pentru a ilustra ambele metode de implementare
-
-
-<form method="post" action="/Articles/New">
-
-    @Html.Label("Title", "Titlu Articol")
-    <br />
-    @Html.TextBox("Title", null, new { @class = "form-control" })
-    <br /><br />
-
-    @Html.Label("Content", "Continut Articol")
-    <br />
-    @Html.TextArea("Content", null, new { @class = "form-control" })
-    <br /><br />
-
-    <label>Selectati categoria</label>
-    @Html.DropDownListFor(m => m.CategoryId,
-            new SelectList(Model.Categ, "Value", "Text"),
-            "Selectati categoria", new { @class = "form-control" })
-
-    <br />
-
-    <button class="btn btn-success" type="submit">Adauga articol</button>
-
-</form>
-*@

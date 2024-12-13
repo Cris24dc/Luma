@@ -49,7 +49,102 @@
     <button type="submit" name="status" value="In progress" class="btn btn-warning">In progress</button>
     <button type="submit" name="status" value="Done" class="btn btn-success">Done</button>
 </form>
+<a class="btn btn-primary mt-3" asp-controller="Projects" asp-action="Index" asp-route-id="@Model.ProjectId">Back to Project</a>
 
+@* Afisare comentarii impreuna cu butoanele de editare si stergere *@
+
+@foreach (var comm in ViewBag.comments)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+
+            <div class="col-md-8">
+
+                <div>
+
+                    <p>@comm.Text</p>
+                    <small>@comm.Date</small>
+
+                </div>
+                <br>
+
+                <div class="d-flex">
+
+                    <div>
+
+                        <a class="btn btn-outline-primary" asp-controller = "Comments" asp-action="Edit" asp-route-id="@comm.Id"><i class="bi bi-pencil-square"></i>Editeaza</a>
+
+                    </div>
+
+                    <div>
+
+                        <form method="post" asp-controller="Comments" asp-action="Delete" asp-route-id="@comm.Id">
+
+                            <button class="btn btn-outline-danger" type="submit"><i class="bi bi-trash"></i>Sterge</button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+                <br />
+
+            </div>
+
+            <div class="col-md-2"></div>
+
+        </div>
+
+    </div>
+}
+
+
+
+
+@*Adaugare comentarii*@
+
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-md-2"></div>
+
+        <div class="col-md-8">
+
+            <div class="card">
+
+                <form method="post" asp-controller="Comments" asp-action="New">
+
+                    <div class="card-body">
+
+                        <input type="hidden" name="TaskId" value="@Model.Id" />
+
+                        <label>Continut comentariu</label>
+                        <br />
+
+                        <textarea class="form-control" name="Text"></textarea>
+
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                        <br />
+
+
+                        <button class="btn btn-success" type="submit">Add comment</button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-2"></div>
+
+    </div>
+
+</div>
 <br />
 
 <a class="btn btn-primary mt-3" asp-controller="Tasks" asp-action="Index" asp-route-projectId="@Model.ProjectId">Back to Project</a>

@@ -1,0 +1,22 @@
+﻿@model Luma.Models.Comment
+
+
+<h2>Edit comment</h2>
+<br />
+
+
+<form asp-action="Edit" asp-controller="Comments" asp-route-id="@Model.Id" method="post">
+
+    <div class="form-group">
+        <label asp-for="Text" class="form-label">Comment text</label>
+        <br />
+        <textarea asp-for="Text" class="form-control"></textarea>
+        <span asp-validation-for="Text" class="text-danger"></span>
+    </div>
+
+    <br /><br />
+
+    <button class="btn btn-primary" type="submit">Edit comment</button>
+
+</form>
+

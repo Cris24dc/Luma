@@ -165,6 +165,9 @@ namespace Luma.Controllers
             ViewBag.UsersWithinTask = usersWithinTask;
             ViewBag.ProjectId = task.Id;
 
+            var comments = db.Comments.Where(a => a.TaskId == id);
+            ViewBag.Comments = comments;
+
             return View(task);
         }
 
