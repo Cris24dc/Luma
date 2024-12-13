@@ -112,8 +112,8 @@ namespace Luma.Controllers
             ViewBag.ShowButtons = task.Project.Organizer == currentUserId || User.IsInRole("Admin");
 
 
-            var comments = from text in db.Comments
-                           select text;
+            var comments = db.Comments.Where(a => a.TaskId == id);
+                           
 
             ViewBag.Comments = comments;
 

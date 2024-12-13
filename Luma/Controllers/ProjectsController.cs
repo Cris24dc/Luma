@@ -33,17 +33,16 @@ namespace Luma.Controllers
         {
             if (User.IsInRole("Member"))
             {
-                var projects = from project in db.Projects.Include("Users")
-                           .Where(a => a.Users.Any(b => b.Id == _userManager.GetUserId(User)))
-                               select project;
+
+                var projects =  db.Projects.Include("Users")
+                           .Where(a => a.Users.Any(b => b.Id == _userManager.GetUserId(User)));
 
                 ViewBag.Projects = projects;
 
                 var projectViewModels = projects.Select(project => new
                 {
                     Project = project,
-                    OrganizerUsername = project.Users
-            .FirstOrDefault(u => u.Id == project.Organizer).UserName 
+                    OrganizerUsername = project.Users.FirstOrDefault(u => u.Id == project.Organizer).UserName 
                 }).ToList();
 
                 ViewBag.ProjectViewModels = projectViewModels;
@@ -95,22 +94,20 @@ namespace Luma.Controllers
 
             var user = db.Users.FirstOrDefault(u => u.Id == userId);
 
-            if (user != null)
+            if (ModelState.IsValid)
             {
                 p.Users = new List<User> { user };
 
                 db.Projects.Add(p);
                 db.SaveChanges();
-
-              
+                TempData["message"] = "Project was added";
+                TempData["messageType"] = "alert-success";
 
                 return RedirectToAction("Index");
             }
             else
-            {
-                TempData["message"] = "User not found.";
-                TempData["messageType"] = "alert-danger";
-                return RedirectToAction("Index");
+            { 
+                return View(p);
             }
         }
 
@@ -140,20 +137,28 @@ namespace Luma.Controllers
         public IActionResult Edit(int id, Project editproject)
         {
             Project project = db.Projects.Find(id);
-            if ((project.Organizer == _userManager.GetUserId(User)) || User.IsInRole("Admin"))
-            {
-                project.Project_Name = editproject.Project_Name;
 
-                TempData["message"] = "Project was modified";
-                TempData["messageType"] = "alert-succes";
-                db.SaveChanges();
-                return RedirectToAction("Index");   
+            if (ModelState.IsValid)
+            {
+                if ((project.Organizer == _userManager.GetUserId(User)) || User.IsInRole("Admin"))
+                {
+                    project.Project_Name = editproject.Project_Name;
+
+                    TempData["message"] = "Project was modified";
+                    TempData["messageType"] = "alert-succes";
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    TempData["message"] = "You dont have permission to edit the project";
+                    TempData["messageType"] = "alert-danger";
+                    return RedirectToAction("Index");
+                }
             }
             else
             {
-                TempData["message"] = "You dont have permission to edit the project";
-                TempData["messageType"] = "alert-danger";
-                return RedirectToAction("Index");
+                return View(editproject);
             }
         }
 

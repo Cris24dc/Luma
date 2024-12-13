@@ -7,7 +7,7 @@ namespace Luma.Models
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Continutul comentariului este obligatoriu")]
+        [Required(ErrorMessage = "Comments should have text")]
         public string Text { get; set; }
 
         public DateTime Date { get; set; }
