@@ -54,18 +54,15 @@ namespace Luma.Controllers
                 }
             }
 
+            // Get the number of project members (check if Users is null)
+            var numberOfMembers = project.Users?.Count() ?? 0;
+            ViewBag.NumberOfMembers = numberOfMembers;
+
             // Organizer user
             var organizer = _userManager.Users.FirstOrDefault(u => u.Id == project.Organizer);
 
             // Select organizer username
-            if (organizer != null)
-            {
-                ViewBag.OrganizerName = $"{organizer.UserName}";
-            }
-            else
-            {
-                ViewBag.OrganizerName = "Unknown Organizer";
-            }
+            ViewBag.OrganizerName = organizer?.UserName ?? "Unknown Organizer";
 
             // CRUD for organizer
             SetAccessRights(project);
@@ -78,6 +75,7 @@ namespace Luma.Controllers
 
             return View(project);
         }
+
 
         // GET: Tasks/New
         [Authorize]
@@ -185,7 +183,7 @@ namespace Luma.Controllers
             return RedirectToAction("Index", "Tasks", new { projectId = projectId });
         }
 
-        // Se if it has CRUD rights
+        // See if it has CRUD rights
         private void SetAccessRights(Project project)
         {
             ViewBag.ShowButtons = false;

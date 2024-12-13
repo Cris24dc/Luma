@@ -1,0 +1,25 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "Manage Users - Luma";
+    var users = ViewBag.Users as List<User>;
+}
+
+<h1>Manage Users: </h1>
+
+@if (users == null || !users.Any())
+{
+    <p>No users to list.</p>
+}
+else
+{
+    @foreach (var user in users)
+    {
+        <div class="card mb-2 d-flex flex-row justify-content-between mb-3">
+            <p>@user.Email</p>
+        </div>
+    }
+}
+
+<br />
+<a class="btn btn-primary mt-3" asp-controller="Tasks" asp-action="Index" asp-route-projectId="@ViewBag.ProjectId">Back to Project</a>

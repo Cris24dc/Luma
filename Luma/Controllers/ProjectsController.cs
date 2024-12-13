@@ -1,33 +1,32 @@
 ﻿using Luma.Data;
+using Luma.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Luma.Models;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using Microsoft.VisualStudio.TextTemplating;
+using ProjectModel = Luma.Models.Project;
 
 namespace Luma.Controllers
 {
     [Authorize]
     public class ProjectsController : Controller
     {
-
         private readonly ApplicationDbContext db;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+
         public ProjectsController(
-       ApplicationDbContext context,
-       UserManager<User> userManager,
-       RoleManager<IdentityRole> roleManager
-       )
+            ApplicationDbContext context,
+            UserManager<User> userManager,
+            RoleManager<IdentityRole> roleManager)
         {
             db = context;
             _userManager = userManager;
             _roleManager = roleManager;
         }
 
-        
+        // GET: Index Action:
         [Authorize(Roles = "Member,Admin")]
         public IActionResult Index()
         {
@@ -42,8 +41,7 @@ namespace Luma.Controllers
                 var projectViewModels = projects.Select(project => new
                 {
                     Project = project,
-                    OrganizerUsername = project.Users
-            .FirstOrDefault(u => u.Id == project.Organizer).UserName 
+                    OrganizerUsername = project.Users.FirstOrDefault(u => u.Id == project.Organizer).UserName
                 }).ToList();
 
                 ViewBag.ProjectViewModels = projectViewModels;
@@ -53,7 +51,7 @@ namespace Luma.Controllers
 
             }
             else
-            if(User.IsInRole("Admin"))
+            if (User.IsInRole("Admin"))
             {
                 var projects = from project in db.Projects.Include("Users")
                                select project;
@@ -62,8 +60,7 @@ namespace Luma.Controllers
                 var projectViewModels = projects.Select(project => new
                 {
                     Project = project,
-                    OrganizerUsername = project.Users
-            .FirstOrDefault(u => u.Id == project.Organizer).UserName // Find the username of the organizer
+                    OrganizerUsername = project.Users.FirstOrDefault(u => u.Id == project.Organizer).UserName
                 }).ToList();
 
                 ViewBag.ProjectViewModels = projectViewModels;
@@ -79,130 +76,155 @@ namespace Luma.Controllers
             }
         }
 
-        [Authorize(Roles = "Member,Admin")]
+        // GET: New Action
+        [Authorize(Roles = "Member, Admin")]
         public IActionResult New()
         {
             return View();
         }
 
+        // POST: New Action
         [HttpPost]
-        [Authorize(Roles = "Member,Admin")]
-        public IActionResult New(Project p)
+        [Authorize(Roles = "Member, Admin")]
+        [ValidateAntiForgeryToken]
+        public IActionResult New(ProjectModel project)
         {
-            string userId = _userManager.GetUserId(User);
-
-            p.Organizer = userId;
-
-            var user = db.Users.FirstOrDefault(u => u.Id == userId);
-
-            if (user != null)
+            if (ModelState.IsValid)
             {
-                p.Users = new List<User> { user };
+                string userId = _userManager.GetUserId(User);
+                project.Organizer = userId;
 
-                db.Projects.Add(p);
-                db.SaveChanges();
-
-              
-
-                return RedirectToAction("Index");
+                var user = db.Users.FirstOrDefault(u => u.Id == userId);
+                if (user != null)
+                {
+                    project.Users = new List<User> { user };
+                    db.Projects.Add(project);
+                    db.SaveChanges();
+                    TempData["message"] = "Project was created successfully.";
+                    TempData["messageType"] = "alert-success";
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    TempData["message"] = "User not found.";
+                    TempData["messageType"] = "alert-danger";
+                    return RedirectToAction("Index");
+                }
             }
-            else
-            {
-                TempData["message"] = "User not found.";
-                TempData["messageType"] = "alert-danger";
-                return RedirectToAction("Index");
-            }
+
+            return View(project);
         }
 
-
-
-        [Authorize(Roles = "Member,Admin")]
-
+        // GET: Edit Action
+        [Authorize(Roles = "Member, Admin")]
         public IActionResult Edit(int id)
         {
-            Project project = db.Projects.Where(p => p.Id == id)
-                                         .First();
+            var project = db.Projects.FirstOrDefault(p => p.Id == id);
+            if (project == null)
+            {
+                return NotFound();
+            }
 
-            if ((project.Organizer == _userManager.GetUserId(User)) || User.IsInRole("Admin"))
+            // Check if the current user is the organizer or admin
+            if (project.Organizer == _userManager.GetUserId(User) || User.IsInRole("Admin"))
             {
                 return View(project);
             }
-            else
-            {
-                TempData["message"] = "You dont have permission to edit the project";
-                TempData["messageType"] = "alert-danger";
-                return RedirectToAction("Index");
-            }
-        }
-        [HttpPost]
-        [Authorize(Roles ="Member,Admin")]
 
-        public IActionResult Edit(int id, Project editproject)
-        {
-            Project project = db.Projects.Find(id);
-            if ((project.Organizer == _userManager.GetUserId(User)) || User.IsInRole("Admin"))
-            {
-                project.Project_Name = editproject.Project_Name;
-
-                TempData["message"] = "Project was modified";
-                TempData["messageType"] = "alert-succes";
-                db.SaveChanges();
-                return RedirectToAction("Index");   
-            }
-            else
-            {
-                TempData["message"] = "You dont have permission to edit the project";
-                TempData["messageType"] = "alert-danger";
-                return RedirectToAction("Index");
-            }
+            TempData["message"] = "You do not have permission to edit this project.";
+            TempData["messageType"] = "alert-danger";
+            return RedirectToAction("Index");
         }
 
-
-        [Authorize(Roles = "Member,Admin")]
+        // POST: Edit Action
         [HttpPost]
-        public IActionResult Delete(int id)
+        [Authorize(Roles = "Member, Admin")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, ProjectModel editedProject)
         {
-            Project project = db.Projects.Where(p => p.Id == id)
-                                         .First();
-
-            if ((project.Organizer == _userManager.GetUserId(User)) || User.IsInRole("Admin"))
+            var project = db.Projects.FirstOrDefault(p => p.Id == id);
+            if (project == null)
             {
-                db.Projects.Remove(project);
+                return NotFound();
+            }
+
+            if (project.Organizer == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+            {
+                project.Project_Name = editedProject.Project_Name;
+
                 db.SaveChanges();
-                TempData["message"] = "Project was deleted";
+
+                TempData["message"] = "Project was modified successfully.";
                 TempData["messageType"] = "alert-success";
                 return RedirectToAction("Index");
             }
-            else
+
+            TempData["message"] = "You do not have permission to edit this project.";
+            TempData["messageType"] = "alert-danger";
+            return RedirectToAction("Index");
+        }
+
+        // POST: Delete Action
+        [HttpPost]
+        [Authorize(Roles = "Member, Admin")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            var project = db.Projects.FirstOrDefault(p => p.Id == id);
+            if (project == null)
             {
-                TempData["message"] = "You dont have permission to delete the project";
-                TempData["messageType"] = "alert-danger";
+                return NotFound();
+            }
+
+            if (project.Organizer == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+            {
+                db.Projects.Remove(project);
+                db.SaveChanges();
+
+                TempData["message"] = "Project was deleted successfully.";
+                TempData["messageType"] = "alert-success";
                 return RedirectToAction("Index");
             }
 
+            TempData["message"] = "You do not have permission to delete this project.";
+            TempData["messageType"] = "alert-danger";
+            return RedirectToAction("Index");
         }
 
-
-        private void SetAccessRights()
+        // GET: AllUsers
+        [Authorize(Roles = "Member, Admin")]
+        public IActionResult AllUsers(int projectId)
         {
-            ViewBag.AfisareButoane = false;
-
-            if (User.IsInRole("Member"))
+            var adminRoleId = db.Roles.FirstOrDefault(r => r.Name == "Admin")?.Id;
+            if (adminRoleId == null)
             {
-                ViewBag.AfisareButoane = true;
+                return NotFound("Rolul Admin nu există.");
             }
 
-            ViewBag.EsteAdmin = User.IsInRole("Admin");
+            var adminUserIds = db.UserRoles
+                                 .Where(ur => ur.RoleId == adminRoleId)
+                                 .Select(ur => ur.UserId)
+                                 .ToList();
 
-            ViewBag.UserCurent = _userManager.GetUserId(User);
+            var users = db.Users
+                          .Where(u => !adminUserIds.Contains(u.Id))
+                          .ToList();
+
+            ViewBag.Users = users;
+            ViewBag.ProjectId = projectId;
+            return View();
         }
 
+        // See if it has CRUD rights
+        private void SetAccessRights(ProjectModel project)
+        {
+            ViewBag.ShowButtons = false;
 
-
-
-
-
-
-
+            var currentUserId = _userManager.GetUserId(User);
+            if (project.Organizer == currentUserId || User.IsInRole("Admin"))
+            {
+                ViewBag.ShowButtons = true;
+            }
+        }
     }
 }

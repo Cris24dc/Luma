@@ -18,7 +18,15 @@
 </div>
 
 <!-- Members Info -->
-
+<div class="card mb-4 d-flex flex-row justify-content-between mb-3">
+    <h2>@ViewBag.NumberOfMembers Members</h2>
+    <div class="d-flex flex-row justify-content-between mb-3">
+        @if (ViewBag.ShowButtons)
+        {
+            <a class="btn btn-success" asp-controller="Projects" asp-action="AllUsers" asp-route-projectId="@Model.Id">Manage Members</a>
+        }
+    </div>
+</div>
 
 <div class="row">
     <!-- To do Column -->
