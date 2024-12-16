@@ -31,6 +31,7 @@ namespace Luma.Controllers
 
            
             comment.Date = DateTime.Now;
+            var id = comment.TaskId;
 
             if (ModelState.IsValid)
             {
@@ -41,9 +42,9 @@ namespace Luma.Controllers
             }
             else
             {
-                    TempData["message"] = "Comment is null.";
+                    TempData["comment"] = "Comment cannot be null.";
                     TempData["messageType"] = "alert-danger";
-                    return RedirectToAction("Index", "Projects");
+                    return RedirectToAction("Show", "Tasks", new {id = id});
 
             }
         }

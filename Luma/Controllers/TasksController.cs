@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using TaskModel = Luma.Models.Task;
 using ProjectModel = Luma.Models.Project;
+using Microsoft.Build.Framework;
 
 namespace Luma.Controllers
 {
@@ -97,6 +98,8 @@ namespace Luma.Controllers
                 End_Date = DateTime.Now.AddDays(1)
             };
 
+           
+
             return View(task);
         }
 
@@ -106,14 +109,22 @@ namespace Luma.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult New(TaskModel task)
         {
-            if (ModelState.IsValid)
+
+            if (task.End_Date <= task.Start_Date)
             {
-                db.Tasks.Add(task);
-                db.SaveChanges();
-                return RedirectToAction("Index", "Tasks", new { projectId = task.ProjectId });
+                ModelState.AddModelError("End_Date", "End date must be later than the start date.");
             }
 
-            return View(task);
+            if (ModelState.IsValid == false)
+            {
+                return View(task);
+            }
+
+            db.Tasks.Add(task);
+            db.SaveChanges();
+            return RedirectToAction("Index", "Tasks", new { projectId = task.ProjectId });
+
+
         }
 
         // GET: Show Action

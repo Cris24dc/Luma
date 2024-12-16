@@ -5,6 +5,8 @@
     var usersWithinTask = ViewBag.UsersWithinTask;
 }
 
+
+
 <div class="card">
     <div class="card-body">
         <h2>@Model.Title</h2>
@@ -86,6 +88,8 @@
     </div>
 }
 
+
+
 @*Add Comments*@
 <div class="container">
     <div class="row">
@@ -108,5 +112,13 @@
     </div>
 </div>
 <br />
+
+@if (TempData["comment"] != null)
+{
+    <div class="alert @TempData["messageType"]">
+        @TempData["comment"]
+    </div>
+}
+
 
 <a class="btn btn-primary mt-3" asp-controller="Tasks" asp-action="Index" asp-route-projectId="@Model.ProjectId">Back to Project</a>
