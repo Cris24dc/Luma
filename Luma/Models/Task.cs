@@ -10,14 +10,11 @@ namespace Luma.Models
         public int ProjectId { get; set; }
         public virtual Project? Project { get; set; }
         public virtual ICollection<Comment>? Comments { get; set; }
-
         public string Title { get; set; }
 
         [Required(ErrorMessage = "Tasks should have description")]
         public string Description { get; set; }
-
         public string Status { get; set; }
-
         public DateTime Start_Date { get; set; }
         public DateTime End_Date { get; set; }
 

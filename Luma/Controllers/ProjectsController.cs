@@ -12,6 +12,7 @@ namespace Luma.Controllers
     [Authorize]
     public class ProjectsController : Controller
     {
+        // users and roles:
         private readonly ApplicationDbContext db;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;

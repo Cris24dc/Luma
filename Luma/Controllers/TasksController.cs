@@ -28,7 +28,7 @@ namespace Luma.Controllers
             _roleManager = roleManager;
         }
 
-        // Index Action:
+        // GET: Index Action:
         [Authorize(Roles = "Member, Admin")]
         public IActionResult Index(int projectId)
         {
@@ -79,7 +79,7 @@ namespace Luma.Controllers
         }
 
 
-        // GET: Tasks/New
+        // GET: New Action
         [Authorize]
         public IActionResult New(int projectId, string status)
         {
@@ -100,7 +100,7 @@ namespace Luma.Controllers
             return View(task);
         }
 
-        // POST: Tasks/New
+        // POST: New Action
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
@@ -120,10 +120,11 @@ namespace Luma.Controllers
         [Authorize]
         public IActionResult Show(int id)
         {
-            // Include the Users in the query
             var task = db.Tasks
                          .Include(t => t.Project)
-                         .Include(t => t.Users) // Ensure Users are loaded
+                         .Include(t => t.Users)
+                         .Include(t => t.Comments)
+                             .ThenInclude(c => c.User)
                          .FirstOrDefault(t => t.Id == id);
 
             if (task == null)
@@ -136,36 +137,43 @@ namespace Luma.Controllers
             // Verify if is Organizer or Admin for CRUD
             ViewBag.ShowButtons = task.Project.Organizer == currentUserId || User.IsInRole("Admin");
 
-            // Fetch the admin role ID
+            // Get all admins role ID
             var adminRoleId = db.Roles.FirstOrDefault(r => r.Name == "Admin")?.Id;
             if (adminRoleId == null)
             {
                 return NotFound("Admin role doesn't exist.");
             }
 
-            // Get the list of users who are not Admins and not the current user
+            // Get the users who are not Admins and not the current user
             var adminUserIds = db.UserRoles
                                  .Where(ur => ur.RoleId == adminRoleId)
                                  .Select(ur => ur.UserId)
                                  .ToList();
 
             var users = db.Users
-                          .Where(u => !adminUserIds.Contains(u.Id) && u.Id != currentUserId)
+                          .Where(u => !adminUserIds.Contains(u.Id))
                           .ToList();
 
-            // Prepare the data that includes whether each user is assigned to the task
+            // See what users are in the current task
             var usersWithinTask = users.Select(user => new
             {
                 User = user,
-                IsAssignedToTask = task.Users.Contains(user) // Ensure this won't throw an exception
+                IsAssignedToTask = task.Users.Contains(user)
             }).ToList();
 
-            // Pass the users, usersWithProjectInfo, and projectId to the view
             ViewBag.Users = users;
             ViewBag.UsersWithinTask = usersWithinTask;
             ViewBag.ProjectId = task.Id;
 
-            var comments = db.Comments.Where(a => a.TaskId == id);
+            var comments = task.Comments?.Select(c => new
+            {
+                c.Id,
+                c.Text,
+                c.Date,
+                c.UserId,
+                IsCurrentUserComment = c.UserId == currentUserId
+            }).ToList();
+
             ViewBag.Comments = comments;
 
             return View(task);
@@ -217,7 +225,7 @@ namespace Luma.Controllers
             // Get the projectId of the task
             var projectId = task.ProjectId;
             db.Tasks.Remove(task);
-            db.SaveChanges();
+            db.SaveChanges(); 
 
             // Redirect to the project page
             return RedirectToAction("Index", "Tasks", new { projectId = projectId });
@@ -225,9 +233,113 @@ namespace Luma.Controllers
 
         // GET: AllUsers
         [Authorize(Roles = "Member, Admin")]
-        public IActionResult AllUsers(int projectId)
+        public IActionResult AllUsers(int taskId)
         {
+            // Fetch the admin role ID
+            var adminRoleId = db.Roles.FirstOrDefault(r => r.Name == "Admin")?.Id;
+            if (adminRoleId == null)
+            {
+                return NotFound("Admin role doesn't exist.");
+            }
+
+            // Get the task and its associated project
+            var task = db.Tasks
+                         .Include(t => t.Project)
+                         .Include(t => t.Users)
+                         .FirstOrDefault(t => t.Id == taskId);
+            if (task == null)
+            {
+                return NotFound("Task not found.");
+            }
+
+            var project = db.Projects
+                            .Include(p => p.Users)
+                            .FirstOrDefault(p => p.Id == task.ProjectId);
+            if (project == null)
+            {
+                return NotFound("Project not found.");
+            }
+
+            // Get the current user ID
+            var currentUserId = _userManager.GetUserId(User);
+
+            // Filter users: must be in the project, not admins
+            var adminUserIds = db.UserRoles
+                                 .Where(ur => ur.RoleId == adminRoleId)
+                                 .Select(ur => ur.UserId)
+                                 .ToList();
+
+            var usersInProject = project.Users
+                                        .Where(u => !adminUserIds.Contains(u.Id))
+                                        .ToList();
+
+            // Prepare data to determine task assignment status
+            var usersWithTaskInfo = usersInProject.Select(user => new
+            {
+                User = user,
+                IsAssignedToTask = task.Users.Contains(user)
+            }).ToList();
+
+            ViewBag.UsersWithTaskInfo = usersWithTaskInfo;
+            ViewBag.TaskId = taskId;
+
             return View();
+        }
+
+        // POST: Add User to Task
+        [HttpPost]
+        [Authorize(Roles = "Member, Admin")]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddUserToTask(int taskId, string userId)
+        {
+            var task = db.Tasks.Include(t => t.Users).FirstOrDefault(t => t.Id == taskId);
+            if (task == null)
+            {
+                return NotFound("Task not found.");
+            }
+
+            var user = db.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            // Add the user to the task
+            if (!task.Users.Contains(user))
+            {
+                task.Users.Add(user);
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("AllUsers", new { taskId = taskId });
+        }
+
+        // POST: Remove User from Task
+        [HttpPost]
+        [Authorize(Roles = "Member, Admin")]
+        [ValidateAntiForgeryToken]
+        public IActionResult RemoveUserFromTask(int taskId, string userId)
+        {
+            var task = db.Tasks.Include(t => t.Users).FirstOrDefault(t => t.Id == taskId);
+            if (task == null)
+            {
+                return NotFound("Task not found.");
+            }
+
+            var user = db.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            // Remove the user from the task
+            if (task.Users.Contains(user))
+            {
+                task.Users.Remove(user);
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("AllUsers", new { taskId = taskId });
         }
 
         // See if it has CRUD rights
