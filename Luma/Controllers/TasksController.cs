@@ -210,15 +210,24 @@ namespace Luma.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(TaskModel task)
         {
-            if (ModelState.IsValid)
+
+            if (task.End_Date <= task.Start_Date)
             {
+                ModelState.AddModelError("End_Date", "End date must be later than the start date.");
+            }
+
+            if (ModelState.IsValid == false)
+            {
+                return View(task);
+            }
+
                 db.Tasks.Update(task);
                 db.SaveChanges();
                 // Redirect to the project page
                 return RedirectToAction("Index", "Tasks", new { projectId = task.ProjectId });
-            }
+            
 
-            return View(task);
+           
         }
 
         // POST: Delete Action
