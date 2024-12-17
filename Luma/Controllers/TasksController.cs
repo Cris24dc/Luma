@@ -182,6 +182,7 @@ namespace Luma.Controllers
                 c.Text,
                 c.Date,
                 c.UserId,
+                c.User.UserName,
                 IsCurrentUserComment = c.UserId == currentUserId
             }).ToList();
 
