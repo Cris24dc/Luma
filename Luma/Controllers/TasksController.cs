@@ -9,6 +9,8 @@ using System.Diagnostics;
 using TaskModel = Luma.Models.Task;
 using ProjectModel = Luma.Models.Project;
 using Microsoft.Build.Framework;
+using System.Linq;
+using System.Net.NetworkInformation;
 
 namespace Luma.Controllers
 {
@@ -19,14 +21,19 @@ namespace Luma.Controllers
         private readonly ApplicationDbContext db;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+
+        //media:
+        private readonly IWebHostEnvironment _env;
         public TasksController(
         ApplicationDbContext context,
         UserManager<User> userManager,
-        RoleManager<IdentityRole> roleManager)
+        RoleManager<IdentityRole> roleManager,
+        IWebHostEnvironment env)
         {
             db = context;
             _userManager = userManager;
             _roleManager = roleManager;
+            _env = env;
         }
 
         // GET: Index Action:
@@ -107,12 +114,46 @@ namespace Luma.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public IActionResult New(TaskModel task)
+        public async Task<IActionResult> New(TaskModel task, IFormFile? Media)
         {
 
             if (task.End_Date <= task.Start_Date)
             {
                 ModelState.AddModelError("End_Date", "End date must be later than the start date.");
+            }
+
+          
+
+            if (Media != null && Media.Length > 0)
+            {
+                // Verificăm extensia
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif",".mp4", ".mov" };
+                var fileExtension = Path.GetExtension(Media.FileName).ToLower();
+                if (!allowedExtensions.Contains(fileExtension))
+                {
+                    ModelState.AddModelError("TaskMedia", "Fișierul trebuie să fie o imagine(jpg, jpeg, png, gif) sau un video(mp4, mov)" );
+                    return View(task);
+                }
+
+                // Cale stocare
+                var storagePath = Path.Combine(_env.WebRootPath, "media", Media.FileName);
+                var databaseFileName = "/media/" + Media.FileName;
+                // Salvare fișier
+                using (var fileStream = new FileStream(storagePath, FileMode.Create))
+                {
+                    await Media.CopyToAsync(fileStream);
+                }
+                ModelState.Remove(nameof(task.Media));
+                task.Media = databaseFileName;
+            }
+            else
+            {
+                task.Media = null;
+            }
+
+            if (Media == null)
+            {
+                ModelState.Remove("Media");
             }
 
             if (ModelState.IsValid == false)
@@ -121,7 +162,7 @@ namespace Luma.Controllers
             }
 
             db.Tasks.Add(task);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index", "Tasks", new { projectId = task.ProjectId });
 
 
