@@ -11,6 +11,7 @@ using ProjectModel = Luma.Models.Project;
 using Microsoft.Build.Framework;
 using System.Linq;
 using System.Net.NetworkInformation;
+using Luma.Migrations;
 
 namespace Luma.Controllers
 {
@@ -250,27 +251,55 @@ namespace Luma.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(TaskModel task)
+        public async Task<IActionResult> Edit(TaskModel task, IFormFile? newMedia)
         {
-
             if (task.End_Date <= task.Start_Date)
             {
                 ModelState.AddModelError("End_Date", "End date must be later than the start date.");
             }
 
-            if (ModelState.IsValid == false)
+            if (newMedia != null && newMedia.Length > 0)
+            {
+                // Verificăm extensia
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".mp4", ".mov" };
+                var fileExtension = Path.GetExtension(newMedia.FileName).ToLower();
+
+                if (!allowedExtensions.Contains(fileExtension))
+                {
+                    ModelState.AddModelError("Media", "File must be an image (jpg, jpeg, png, gif) or a video (mp4, mov).");
+                    return View(task);
+                }
+
+                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(newMedia.FileName);
+
+
+                // Cale stocare
+                var storagePath = Path.Combine(_env.WebRootPath, "media", uniqueFileName);
+                var databaseFileName = "/media/" + uniqueFileName;
+                // Salvare fișier
+                using (var fileStream = new FileStream(storagePath, FileMode.Create))
+                {
+                    await newMedia.CopyToAsync(fileStream);
+                }
+
+                task.Media = databaseFileName;
+            }
+            else
+            {
+                   task.Media = null;
+            }
+
+            if (!ModelState.IsValid)
             {
                 return View(task);
             }
 
-                db.Tasks.Update(task);
-                db.SaveChanges();
-                // Redirect to the project page
-                return RedirectToAction("Index", "Tasks", new { projectId = task.ProjectId });
-            
+            db.Tasks.Update(task);
+            await db.SaveChangesAsync();
 
-           
+            return RedirectToAction("Index", "Tasks", new { projectId = task.ProjectId });
         }
+
 
         // POST: Delete Action
         [HttpPost]

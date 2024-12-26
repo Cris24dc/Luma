@@ -6,11 +6,12 @@
 
 <h2>Edit Task</h2>
 
-<form asp-action="Edit" method="post" class="needs-validation" novalidate>
+<form asp-action="Edit" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
     <input type="hidden" asp-for="Id" />
     <input type="hidden" asp-for="ProjectId" />
     <input type="hidden" asp-for="Start_Date" />
     <input type="hidden" asp-for="Status" />
+    <input type="hidden" asp-for="Media" />
 
     <div class="form-group">
         <label asp-for="Title" class="form-label"></label>
@@ -29,6 +30,14 @@
         <input asp-for="End_Date" class="form-control" />
         <span asp-validation-for="End_Date" class="text-danger"></span>
     </div>
+
+    <div class="form-group">
+
+        <label asp-for="Media" class="form-label">Upload Media</label>
+        <input type="file" name="newMedia" class="form-control" />
+        <span asp-validation-for="Media" class="text-danger"></span>
+    </div>
+
 
     <button type="submit" class="btn btn-primary">Save Changes</button>
     <a class="btn btn-secondary" asp-action="Show" asp-route-id="@Model.Id">Cancel</a>
