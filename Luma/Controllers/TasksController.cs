@@ -251,16 +251,23 @@ namespace Luma.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(TaskModel task, IFormFile? newMedia)
+        public async Task<IActionResult> Edit(TaskModel task, IFormFile? newMedia, string? removeMedia)
         {
-            if (task.End_Date <= task.Start_Date)
+            if (!string.IsNullOrEmpty(removeMedia) && removeMedia == "true")
             {
-                ModelState.AddModelError("End_Date", "End date must be later than the start date.");
-            }
+                if (!string.IsNullOrEmpty(task.Media))
+                {
+                    var filePath = Path.Combine(_env.WebRootPath, task.Media.TrimStart('/'));
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
 
-            if (newMedia != null && newMedia.Length > 0)
+                    task.Media = null;
+                }
+            }
+            else if (newMedia != null && newMedia.Length > 0)
             {
-                // Verificăm extensia
                 var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".mp4", ".mov" };
                 var fileExtension = Path.GetExtension(newMedia.FileName).ToLower();
 
@@ -271,12 +278,9 @@ namespace Luma.Controllers
                 }
 
                 var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(newMedia.FileName);
-
-
-                // Cale stocare
                 var storagePath = Path.Combine(_env.WebRootPath, "media", uniqueFileName);
                 var databaseFileName = "/media/" + uniqueFileName;
-                // Salvare fișier
+
                 using (var fileStream = new FileStream(storagePath, FileMode.Create))
                 {
                     await newMedia.CopyToAsync(fileStream);
@@ -284,9 +288,10 @@ namespace Luma.Controllers
 
                 task.Media = databaseFileName;
             }
-            else
+
+            if (task.End_Date <= task.Start_Date)
             {
-                   task.Media = null;
+                ModelState.AddModelError("End_Date", "End date must be later than the start date.");
             }
 
             if (!ModelState.IsValid)
@@ -300,6 +305,7 @@ namespace Luma.Controllers
             return RedirectToAction("Index", "Tasks", new { projectId = task.ProjectId });
         }
 
+   
 
         // POST: Delete Action
         [HttpPost]
