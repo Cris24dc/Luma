@@ -360,7 +360,6 @@ FodyWeavers.xsd
 # Directories
 bin/
 obj/
-wwwroot/
 
 # Entity Framework Migrations
 Migrations/

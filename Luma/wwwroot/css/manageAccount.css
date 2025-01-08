@@ -1,0 +1,136 @@
+.confirm-reg-email-title {
+  width: 55%;
+}
+
+#manage-acc-con {
+  height: 75%;
+  width: 55%;
+  display: flex;
+}
+
+#left-nav-acc {
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#acc-settings {
+  background-color: var(--gray-color);
+  border-radius: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 75%;
+}
+
+#acc-nav-ul {
+  height: 55%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#acc-nav-ul li {
+  list-style: none;
+}
+
+#acc-nav-ul a,
+button {
+  cursor: pointer;
+  font-size: var(--font-size-medium);
+}
+
+/* Profile Page */
+.manage-container {
+  width: 70%;
+  height: 75%;
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.manage-container h3 {
+  text-align: center;
+  font-size: 1.6rem;
+}
+
+.manage-form-wrapper {
+  height: 80%;
+}
+
+.manage-form-wrapper form {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.manage-form-wrapper form div {
+  display: flex;
+  flex-direction: column;
+  font-size: 1.2rem;
+}
+
+.manage-form-wrapper button {
+  text-align: center;
+  width: 55%;
+  padding: 10px 15px;
+  background-color: #ffc107;
+  border-radius: 0.6rem !important;
+  cursor: pointer;
+}
+.manage-form-wrapper button:hover {
+  background-color: #e0a800;
+}
+
+.manage-form-wrapper input {
+  padding: 5px;
+  margin-top: 1rem;
+  height: 3rem;
+  border-radius: 0.6rem !important;
+  outline: none;
+  border: 2px #fff solid;
+}
+
+#Email {
+  border: none;
+}
+
+.personal-data-content {
+  height: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 15px;
+  font-size: 1rem;
+}
+
+#delete {
+  color: #dc3545;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+#delete:hover {
+  text-decoration: underline;
+}
+
+#acc-nav-ul a {
+  color: #4f4f4f;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+#acc-nav-ul a:hover {
+  color: #ffffff;
+}
+
+#acc-nav-ul a.active {
+  color: #ffffff;
+  font-weight: bold;
+}

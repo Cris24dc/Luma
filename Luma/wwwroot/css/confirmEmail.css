@@ -1,0 +1,22 @@
+.confirm-email-con {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.confirm-reg-email-title {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.confirm-reg-content {
+  text-align: center;
+  width: 50%;
+}
+
+#confirm-link {
+  font-weight: 800;
+}

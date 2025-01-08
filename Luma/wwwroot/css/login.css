@@ -1,0 +1,99 @@
+form#account {
+  background-color: var(--white-color);
+  padding: var(--padding-medium);
+  border-radius: 1rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+form#account h2 {
+  color: var(--gray-color);
+  margin-bottom: var(--padding-small);
+  text-align: center;
+}
+
+form#account div {
+  margin-bottom: var(--padding-small);
+}
+
+form#account input {
+  width: 100%;
+  padding: var(--padding-small);
+  font-size: var(--font-size-medium);
+  border: 1px solid var(--light-gray-color);
+  border-radius: 4px;
+  color: var(--gray-color);
+  background-color: var(--white-color);
+}
+
+form#account input::placeholder {
+  color: var(--light-gray-color);
+}
+
+form#account input:focus {
+  outline: none;
+  border-color: var(--gray-color);
+}
+
+form#account label {
+  font-size: var(--font-size-small);
+  margin-top: var(--padding-small);
+}
+
+form#account button {
+  width: 100%;
+  background-color: var(--gray-color);
+  color: var(--white-color);
+  padding: var(--padding-small);
+  border-radius: 1rem;
+  font-size: var(--font-size-medium);
+  cursor: pointer;
+}
+
+form#account button:hover {
+  background-color: var(--alt-black-color);
+}
+
+label#login-email {
+  color: var(--gray-color);
+}
+label#login-pass {
+  color: var(--gray-color);
+}
+a#forgot-password {
+  color: var(--gray-color);
+}
+
+a#login-reg {
+  color: var(--gray-color);
+}
+
+a#resend-confirmation {
+  color: var(--gray-color);
+}
+
+form#account .remember-me {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--font-size-small);
+  color: var(--gray-color) !important;
+}
+
+form#account .remember-me span {
+  color: inherit !important;
+}
+
+form#account .remember-me input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--gray-color);
+  cursor: pointer;
+}
+
+#Input_Email-error {
+  color: var(--gray-color);
+}
+#Input_Password-error {
+  color: var(--gray-color);
+}
