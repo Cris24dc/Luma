@@ -1,50 +1,102 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Luma</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Luma.styles.css" asp-append-version="true" />
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Luma</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Projects" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - Luma - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- standard meta tags -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- page details meta tags -->
+    <title>@ViewData["Title"] - Luma</title>
+    <meta
+      name="description"
+      content="Luma is a modern task management tool, designed to help you organize and prioritize tasks efficiently, similar to Trello, with a user-friendly interface."
+    />
+    <meta
+      name="keywords"
+      content="task manager, Trello, productivity, team collaboration, task board, to-do list, project management, Luma"
+    />
+    <meta name="author" content="Andrei Cristian-David Guinea Paul" />
+
+    <!-- Social media sharing meta tags -->
+    <meta property="og:title" content="Luma - Task Manager" />
+    <meta
+      property="og:description"
+      content="Luma is a task management platform to help you stay organized, track progress, and collaborate with your team in a seamless way."
+    />
+    <meta property="og:type" content="website" />
+    @*
+    <meta property="og:url" content="https://www.luma.com" />
+    <!-- Asigură-te că adresa este corectă -->
+    *@ @*
+    <meta
+      property="og:image"
+      content="https://www.luma.com/path-to-your-image.jpg"
+    />
+    <!-- Înlocuiește cu calea corectă a imaginii -->
+    *@
+    <meta property="og:image:alt" content="Luma logo or task board" />
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Lexend:wght@100..900&family=Quicksand:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- links -->
+    <link rel="icon" type="image/png" href="~/img/favicon.ico" id="favicon" />
+    <link rel="stylesheet" href="~/css/reset.css" />
+    <link rel="stylesheet" href="~/css/variables.css" />
+
+    <!-- page style -->
+    <link rel="stylesheet" href="~/css/index.css" />
+    <link rel="stylesheet" href="~/css/homeIndex.css" />
+    <link rel="stylesheet" href="~/css/register.css" />
+    <link rel="stylesheet" href="~/css/login.css" />
+    <link rel="stylesheet" href="~/css/manageAccount.css" />
+    <link rel="stylesheet" href="~/css/confirmEmail.css" />
+    <link rel="stylesheet" href="~/css/projects.css" />
+  </head>
+  <body class="@(SignInManager.IsSignedIn(User) ? "logged-in" : "not-logged-in")">
+    <header>
+      <nav>
+        @if (SignInManager.IsSignedIn(User)) {
+        <a
+          asp-area=""
+          asp-controller="Projects"
+          asp-action="Index"
+        >
+          <img class="logo-img" src="~/img/Luma-Logo.png" alt="Logo" />
+        </a>
+        } else {
+        <a
+          class="logo-anchor"
+          asp-area=""
+          asp-controller="Home"
+          asp-action="Index"
+        >
+          <img class="logo-img" src="~/img/Luma-Logo.png" alt="Logo" />
+        </a>
+        }
+        <partial name="_LoginPartial" />
+      </nav>
+    </header>
+
+    <main role="main">@RenderBody()</main>
+
+    <footer class="hidden">
+      <div>&copy; 2024 - Luma</div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/slideshow.js"></script>
+    <script src="~/js/fadeIn.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
-</body>
+  </body>
 </html>

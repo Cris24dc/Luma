@@ -1,11 +1,12 @@
-using Luma.Data;
+﻿using Luma.Data;
 using Luma.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
@@ -40,12 +41,30 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
+
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/")
+    {
+        if (context.User?.Identity?.IsAuthenticated == true)
+        {
+            context.Response.Redirect("/Projects/Index");
+            return;
+        }
+        else
+        {
+            context.Response.Redirect("/Home/Index");
+            return;
+        }
+    }
+    await next();
+});
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Projects}/{action=Index}/{ProjectId?}");
+    pattern: "{controller=Home}/{action=Index}/{ProjectId?}");
 
 app.MapControllerRoute(
     name: "addMembers",
