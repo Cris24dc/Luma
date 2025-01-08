@@ -1,39 +1,40 @@
 ﻿@model dynamic
 
 @{
-    ViewBag.Title = "Manage Users - Luma";
+    ViewBag.Title = "Manage Users";
     var users = ViewBag.Users as List<User>;
     var usersWithProjectInfo = ViewBag.UsersWithProjectInfo;
     var projectId = ViewBag.ProjectId;
 }
 
-<h1>Manage Users: </h1>
+<div id="manage-users-con">
+    <h1 class="page-title">Manage Users</h1>
 
-<div class="list-group">
-    @foreach (var userInfo in usersWithProjectInfo)
-    {
-        <div class="card mb-2 d-flex flex-row justify-content-between">
-            <div>
-                <p>@userInfo.User.Email</p>
-            </div>
+    <div class="users-list">
+        @foreach (var userInfo in usersWithProjectInfo)
+        {
+            <div class="user-card">
+                <div class="user-info">
+                    <p class="user-email">@userInfo.User.Email</p>
+                </div>
 
-            <div>
-                @if (userInfo.IsAssignedToProject)
-                {
-                    <form method="post" asp-action="RemoveUserFromProject" asp-route-projectId="@projectId" asp-route-userId="@userInfo.User.Id">
-                        <button type="submit" class="btn btn-danger">Remove</button>
-                    </form>
-                }
-                else
-                {
-                    <form method="post" asp-action="AddUserToProject" asp-route-projectId="@projectId" asp-route-userId="@userInfo.User.Id">
-                        <button type="submit" class="btn btn-primary">Add</button>
-                    </form>
-                }
+                <div class="user-actions">
+                    @if (userInfo.IsAssignedToProject)
+                    {
+                        <form method="post" asp-action="RemoveUserFromProject" asp-route-projectId="@projectId" asp-route-userId="@userInfo.User.Id" class="user-form">
+                            <button type="submit" class="btn btn-remove">Remove</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form method="post" asp-action="AddUserToProject" asp-route-projectId="@projectId" asp-route-userId="@userInfo.User.Id" class="user-form">
+                            <button type="submit" class="btn btn-add">Add</button>
+                        </form>
+                    }
+                </div>
             </div>
-        </div>
-    }
+        }
+    </div>
+
+    <a asp-controller="Tasks" asp-action="Index" asp-route-projectId="@projectId" class="btn-back">Back to Project</a>
 </div>
-
-<br />
-<a class="btn btn-primary mt-3" asp-controller="Tasks" asp-action="Index" asp-route-projectId="@projectId">Back to Project</a>

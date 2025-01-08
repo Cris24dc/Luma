@@ -1,32 +1,22 @@
 ﻿@model Luma.Models.Project
 
-<h2 class="text-center mt-5">Edit Project</h2>
+@{
+    ViewBag.Title = "Edit Project";
+}
 
-<br />
+<div id="edit-project-con">
+    <h2 class="page-title">Edit Project</h2>
 
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-6 offset-3">
-
-            <form method="post" asp-action="Edit" asp-controller="Projects" asp-route-id="@Model.Id">
-                
-
-                <div asp-validation-summary="All" class="text-danger"></div>
-
-                <div class="form-group">
-                    <label asp-for="Project_Name" class="form-label">Titlu Articol</label>
-                    <br />
-                    <input asp-for="Project_Name" class="form-control" />
-
-                    <span asp-validation-for="Project_Name" class="text-danger"></span>
-
-                    <br /><br />
-                </div>
-
-                <button class="btn btn-sm btn-success" type="submit">Modify Project</button>
-                <a href="@Url.Action("Index", "Tasks", new { projectId = Model.Id })"  class="btn btn-secondary">Cancel</a>
-            </form>
+    <form method="post" asp-action="Edit" asp-controller="Projects" asp-route-id="@Model.Id">
+        <div class="form-group">
+            <label asp-for="Project_Name" class="form-label">Project Name</label>
+            <input asp-for="Project_Name" class="form-input" />
+            <span asp-validation-for="Project_Name" class="validation-message"></span>
         </div>
-    </div>
-</div>
 
+        <div class="form-actions">
+            <button type="submit">Modify Project</button>
+            <a href="@Url.Action("Index", "Tasks", new { projectId = Model.Id })">Cancel</a>
+        </div>
+    </form>
+</div>

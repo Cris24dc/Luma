@@ -1,8 +1,45 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewBag.Title = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="main-container">
+    <div class="left-panel slideshow">
+        <div class="slides" id="slides">
+            <!-- Slide 1 -->
+            <div class="slide-item">
+                <img src="~/img/slide3.svg" alt="Personalized">
+                <div class="text">
+                    <h2>Personalized for Your Needs</h2>
+                    <p>Adapt Luma to your style. Create boards, set priorities, and organize your workflow your way.</p>
+                </div>
+            </div>
+            <!-- Slide 2 -->
+            <div class="slide-item">
+                <img src="~/img/slide2.svg" alt="Collaboration">
+                <div class="text">
+                    <h2>Effortless Collaboration</h2>
+                    <p>Work smarter with your team. Share ideas, track progress, and stay connected in real time.</p>
+                </div>
+            </div>
+            <!-- Slide 3 -->
+            <div class="slide-item">
+                <img src="~/img/slide1.svg" alt="Organized">
+                <div class="text">
+                    <h2>Stay Organized, Stay Focused</h2>
+                    <p>Turn your ideas into action. Manage tasks and projects with ease, keeping everything clear and structured.</p>
+                </div>
+            </div>
+        </div>
+        <div class="dots" id="dots">
+            <div class="dot active" data-index="0"></div>
+            <div class="dot" data-index="1"></div>
+            <div class="dot" data-index="2"></div>
+        </div>
+    </div>
+
+    <div class="right-panel">
+        <h2>Welcome to Luma!</h2>
+        <p>Get started on your journey to better task management and productivity. Log in to access your personalized dashboard or sign up to create an account.</p>
+        <a class="btn-get-started" asp-area="Identity" asp-page="/Account/Register">Get Started</a>
+    </div>
 </div>

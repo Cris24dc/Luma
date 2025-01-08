@@ -1,0 +1,63 @@
+:root {
+  /* colors */
+  --background-color: #f5f5f5;
+  --white-color: #ffffff;
+  --black-color: #000000;
+  --alt-black-color: #222222;
+  --gray-color: #393939;
+  --light-gray-color: #c0c0c0;
+
+  /* font-sizes with clamp */
+  --font-size-small: clamp(0.875rem, 1vw, 1rem);
+  --font-size-medium: clamp(1rem, 1.5vw, 1.25rem);
+  --font-size-large: clamp(1.25rem, 2vw, 1.5rem);
+
+  /* padding with clamp */
+  --padding-small: clamp(0.5rem, 1vw, 1rem);
+  --padding-medium: clamp(1rem, 2vw, 1.5rem);
+  --padding-large: clamp(1.5rem, 3vw, 2rem);
+
+  /* font-families */
+  --font-primary: "Fredoka", sans-serif;
+  --font-secondary: "Lexend", sans-serif;
+  --font-tertiary: "Quicksand", sans-serif;
+}
+
+.hidden {
+  display: none;
+}
+
+.hidden2 {
+  visibility: hidden;
+}
+
+/* scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f4f4f4;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #999;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #777;
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+::-webkit-resizer {
+  display: none;
+}

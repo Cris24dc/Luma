@@ -1,40 +1,36 @@
-﻿<br />
-<h2 class="text-center">Projects</h2>
-
-<br />
-
-@if(ViewBag.Message != null)
-{
-    <div class="alert-success p-3 rounded-3 text-center mb-5 @ViewBag.Alert">
-        @ViewBag.Message
-    </div>
+﻿@{
+    ViewData["Title"] = "Projects";
 }
+<div id="projects-con">
+    <h2>Projects</h2>
 
-<br />
-
-
-
-@foreach (var projectViewModel in ViewBag.ProjectViewModels)
-{
-    <div class="card mb-2" style="cursor: pointer;" onclick="location.href='@Url.Action("Index", "Tasks", new { ProjectId = projectViewModel.Project.Id })'">
+    @if (ViewBag.Message != null)
+    {
         <div>
-            <h3>@projectViewModel.Project.Project_Name</h3>
-            @if (!string.IsNullOrEmpty(projectViewModel.OrganizerUsername))
-            {
-                <p>Organized by: @projectViewModel.OrganizerUsername</p>
-            }
-            else
-            {
-                <p>Organizer not found.</p>
-            }
+            @ViewBag.Message
         </div>
+    }
+
+    <div class="project-grid">
+        <div class="project-card add-project">
+            <a href="/Projects/New" class="add-project-button">+</a>
+        </div>
+        @if (ViewBag.ProjectViewModels != null)
+        {
+            foreach (var projectViewModel in ViewBag.ProjectViewModels)
+            {
+                <div class="project-card" onclick="location.href='@Url.Action("Index", "Tasks", new { ProjectId = projectViewModel.Project.Id })'">
+                    <h3>@projectViewModel.Project.Project_Name</h3>
+                    @if (!string.IsNullOrEmpty(projectViewModel.OrganizerUsername))
+                    {
+                        <p>Organized by: @projectViewModel.OrganizerUsername</p>
+                    }
+                    else
+                    {
+                        <p>Organizer not found.</p>
+                    }
+                </div>
+            }
+        }
     </div>
-}
-
-<div class="d-flex justify-content-center">
-
-    <br />
-    <a class="btn btn-outline-success" href="/Projects/New">New Project</a>
-    <br />
-
 </div>
