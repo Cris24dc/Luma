@@ -1,140 +1,45 @@
 ﻿@model Luma.Models.Project
 
-<!-- Project Info -->
-<div class="card mb-4">
-    <h1>@Model.Project_Name</h1>
-    <p>Organizer: @ViewBag.OrganizerName</p>
+@{
+    ViewBag.Title = @Model.Project_Name;
+    ViewBag.ProjectId = @Model.Id;
+}
 
-    @if (ViewBag.ShowButtons)
-    {
-        <div class="d-flex flex-row justify-content-between mb-3">
-            <a class="btn btn-success" asp-controller="Projects" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+<div id="tasks">
+    <div id="top-tasks">
+        <!-- Project Info -->
+        <div id="title-tasks">
+            <div>
+                <h1>@Model.Project_Name</h1>
+                @if (ViewBag.ShowButtons)
+                {
+                    <div>
+                        <a asp-controller="Projects" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
 
-            <form method="post" asp-controller="Projects" asp-action="Delete" asp-route-id="@Model.Id">
-                <button class="btn btn-danger" type="submit">Delete</button>
-            </form>
+                        <form method="post" asp-controller="Projects" asp-action="Delete" asp-route-id="@Model.Id">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </div>
+                }
+            </div>
+            <p>Organizer: @ViewBag.OrganizerName</p>
         </div>
-    }
-</div>
 
-<!-- Members Info -->
-<div class="card mb-4 d-flex flex-row justify-content-between mb-3">
-    <h2>@ViewBag.NumberOfMembers Members</h2>
-    <div class="d-flex flex-row justify-content-between mb-3">
-        @if (ViewBag.ShowButtons)
-        {
-            <a class="btn btn-success" asp-controller="Projects" asp-action="AllUsers" asp-route-projectId="@Model.Id">Manage Members</a>
-        }
-    </div>
-</div>
-
-<div class="row">
-    <!-- To do Column -->
-    <div class="col-md-4">
-        <h2 class="d-flex justify-content-between align-items-center">
-            To do
-            @if (ViewBag.ShowButtons)
-            {
-                <a class="btn btn-primary btn-sm" asp-controller="Tasks" asp-action="New" asp-route-projectId="@Model.Id" asp-route-status="To do">Add</a>
-            }
-        </h2>
-        @foreach (var task in ViewBag.ToDoTasks)
-        {
-            <div class="card mb-2" style="cursor: pointer;" onclick="location.href='@Url.Action("Show", "Tasks", new { id = task.Id })'">
-                <div class="card-body">
-                    <h5>@task.Title</h5>
-                    <p>@task.Description</p>
-                    <small>Start: @task.Start_Date, End: @task.End_Date</small>
-                    @if (task.Media != null)
-                    {
-                        @if (task.Media.Contains(".mp4") || task.Media.Contains(".mov"))
-                        {
-                            <video style="width:100%; height: 50%" controls>
-                                <source src="@task.Media" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                        }
-                        else
-                        {
-                            <img src="@task.Media" alt="task Media" style="width:100%; height: 50%; object-fit: fill" />
-                        }
-                    }
-                </div>
+        <!-- Members Info -->
+        <div id="members-tasks">
+            <h2>@ViewBag.NumberOfMembers Members</h2>
+            <div>
+                @if (ViewBag.ShowButtons)
+                {
+                    <a asp-controller="Projects" asp-action="AllUsers" asp-route-projectId="@Model.Id">Manage Members</a>
+                }
             </div>
-        }
+        </div>
     </div>
 
-    <!-- In progress Column -->
-    <div class="col-md-4">
-        <h2 class="d-flex justify-content-between align-items-center">
-            In progress
-            @if (ViewBag.ShowButtons)
-            {
-                <a class="btn btn-primary btn-sm" asp-controller="Tasks" asp-action="New" asp-route-projectId="@Model.Id" asp-route-status="In progress">Add</a>
-            }
-        </h2>
-        @foreach (var task in ViewBag.InProgressTasks)
-        {
-            <div class="card mb-2" style="cursor: pointer;" onclick="location.href='@Url.Action("Show", "Tasks", new { id = task.Id })'">
-                <div class="card-body">
-                    <h5>@task.Title</h5>
-                    <p>@task.Description</p>
-                    <small>Start: @task.Start_Date, End: @task.End_Date</small>
-                   
-                    @if (task.Media != null)
-                        {
-                            @if (task.Media.Contains(".mp4") || task.Media.Contains(".mov"))
-                            {
-                            <video style="width:100%; height: 50%" controls>
-                                    <source src="@task.Media" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            }
-                            else
-                            {
-                                <img src="@task.Media" alt="task Media" style="width:100%; height: 50%; object-fit: fill" />
-                            }
-                        }
-
-                </div>
-            </div>
-           
-        }
-    </div>
-
-    <!-- Done Column -->
-    <div class="col-md-4">
-        <h2 class="d-flex justify-content-between align-items-center">
-            Done
-            @if (ViewBag.ShowButtons)
-            {
-                <a class="btn btn-primary btn-sm" asp-controller="Tasks" asp-action="New" asp-route-projectId="@Model.Id" asp-route-status="Done">Add</a>
-            }
-        </h2>
-        @foreach (var task in ViewBag.DoneTasks)
-        {
-            <div class="card mb-2" style="cursor: pointer;" onclick="location.href='@Url.Action("Show", "Tasks", new { id = task.Id })'">
-                <div class="card-body">
-                    <h5>@task.Title</h5>
-                    <p>@task.Description</p>
-                    <small>Start: @task.Start_Date, End: @task.End_Date</small>
-                    @if (task.Media != null)
-                    {
-                        @if (task.Media.Contains(".mp4") || task.Media.Contains(".mov"))
-                        {
-                            <video style="width:100%; height: 50%" controls>
-                                <source src="@task.Media" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                        }
-                        else
-                        {
-                            <img src="@task.Media" alt="task Media" style="width:100%; height: 50%; object-fit: fill" />
-                        }
-                    }
-                    
-                </div>
-            </div>
-        }
+    <div id="bottom-tasks">
+        @await Html.PartialAsync("_TaskColumn", Tuple.Create("To do", "To do", ViewBag.ToDoTasks as IEnumerable<Luma.Models.Task>))
+        @await Html.PartialAsync("_TaskColumn", Tuple.Create("In progress", "In progress", ViewBag.InProgressTasks as IEnumerable<Luma.Models.Task>))
+        @await Html.PartialAsync("_TaskColumn", Tuple.Create("Done", "Done", ViewBag.DoneTasks as IEnumerable<Luma.Models.Task>))
     </div>
 </div>

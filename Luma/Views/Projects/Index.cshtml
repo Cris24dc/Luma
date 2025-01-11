@@ -12,6 +12,12 @@
     }
 
     <div class="project-grid">
+        @if (ViewBag.IsAdmin)
+        {
+            <div class="project-card admin-link">
+                <a href="/Projects/AdminUsers" class="admin-link-button">Manage Users</a>
+            </div>
+        }
         <div class="project-card add-project">
             <a href="/Projects/New" class="add-project-button">+</a>
         </div>

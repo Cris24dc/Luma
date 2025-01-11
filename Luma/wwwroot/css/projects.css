@@ -44,6 +44,29 @@
   color: var(--light-gray-color);
 }
 
+.admin-link {
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.admin-link:hover {
+  background-color: #fff;
+  color: var(--gray-color);
+  transform: translateY(-2px);
+}
+
+.admin-link-button {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .add-project {
   display: flex;
   align-items: center;
@@ -159,7 +182,7 @@
   border: none;
   cursor: pointer;
   background-color: var(--light-gray-color);
-  color: #fff;
+  color: var(--alt-black-color);
   width: 100%;
   max-width: 200px;
 }
@@ -269,6 +292,101 @@
 
 .btn-back {
   padding: none !important;
+  font-size: 1.2rem;
+  margin-top: 2rem;
+  color: #fff;
+  display: flex;
+  justify-content: left;
+  text-decoration: none;
+}
+
+/* Administer users */
+#admin-users-con {
+  padding: 2rem;
+  background-color: var(--gray-color);
+  border-radius: 1rem;
+}
+
+.page-title {
+  text-align: center;
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 2rem;
+}
+
+.users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.user-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--light-gray-color);
+  border-radius: 0.5rem;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-email {
+  font-size: 1rem;
+  color: var(--gray-color);
+}
+
+.user-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.user-form {
+  margin: 0;
+}
+
+.btn {
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+.btn-add {
+  background-color: var(--success-color);
+  color: var(--gray-color);
+  border: none;
+}
+
+.btn-add:hover {
+  background-color: var(--success-dark-color);
+}
+
+.btn-remove {
+  background-color: var(--warning-color);
+  color: var(--gray-color);
+  border: none;
+}
+
+.btn-remove:hover {
+  background-color: var(--warning-dark-color);
+}
+
+.btn-delete {
+  background-color: var(--error-color);
+  color: var(--gray-color);
+  border: none;
+}
+
+.btn-delete:hover {
+  background-color: var(--error-dark-color);
+}
+
+.btn-back {
   font-size: 1.2rem;
   margin-top: 2rem;
   color: #fff;

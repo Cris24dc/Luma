@@ -61,6 +61,7 @@
     <link rel="stylesheet" href="~/css/manageAccount.css" />
     <link rel="stylesheet" href="~/css/confirmEmail.css" />
     <link rel="stylesheet" href="~/css/projects.css" />
+    <link rel="stylesheet" href="~/css/tasks.css" />
   </head>
   <body class="@(SignInManager.IsSignedIn(User) ? "logged-in" : "not-logged-in")">
     <header>
@@ -97,6 +98,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/slideshow.js"></script>
     <script src="~/js/fadeIn.js"></script>
+    <script src="~/js/tasks.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
   </body>
 </html>

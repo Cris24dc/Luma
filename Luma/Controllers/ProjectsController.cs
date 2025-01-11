@@ -31,49 +31,42 @@ namespace Luma.Controllers
         [Authorize(Roles = "Member,Admin")]
         public IActionResult Index()
         {
-            if (User.IsInRole("Member"))
-            {
+            var currentUserId = _userManager.GetUserId(User);
+            var isAdmin = User.IsInRole("Admin");
+            ViewBag.IsAdmin = isAdmin;
 
-                var projects =  db.Projects.Include("Users")
-                           .Where(a => a.Users.Any(b => b.Id == _userManager.GetUserId(User)));
+            // Dacă utilizatorul este admin, returnează toate proiectele
+            if (isAdmin)
+            {
+                var projects = db.Projects.Include(p => p.Users).ToList();
+                ViewBag.Projects = projects;
+
+                var projectViewModels = projects.Select(project => new
+                {
+                    Project = project,
+                    OrganizerUsername = project.Users.FirstOrDefault(u => u.Id == project.Organizer)?.UserName
+                }).ToList();
+
+                ViewBag.ProjectViewModels = projectViewModels;
+                return View();
+            }
+            else
+            {
+                // Dacă utilizatorul este doar Member, returnează proiectele în care este implicat
+                var projects = db.Projects.Include(p => p.Users)
+                                          .Where(p => p.Users.Any(u => u.Id == currentUserId))
+                                          .ToList();
 
                 ViewBag.Projects = projects;
 
                 var projectViewModels = projects.Select(project => new
                 {
                     Project = project,
-                    OrganizerUsername = project.Users.FirstOrDefault(u => u.Id == project.Organizer).UserName
+                    OrganizerUsername = project.Users.FirstOrDefault(u => u.Id == project.Organizer)?.UserName
                 }).ToList();
 
                 ViewBag.ProjectViewModels = projectViewModels;
-
-
                 return View();
-
-            }
-            else
-            if (User.IsInRole("Admin"))
-            {
-                var projects = from project in db.Projects.Include("Users")
-                               select project;
-                ViewBag.Projects = projects;
-
-                var projectViewModels = projects.Select(project => new
-                {
-                    Project = project,
-                    OrganizerUsername = project.Users.FirstOrDefault(u => u.Id == project.Organizer).UserName
-                }).ToList();
-
-                ViewBag.ProjectViewModels = projectViewModels;
-
-                return View();
-            }
-
-            else
-            {
-                TempData["message"] = "Nu aveti drepturi asupra colectiei";
-                TempData["messageType"] = "alert-danger";
-                return RedirectToAction("Index", "Projects");
             }
         }
 
@@ -294,6 +287,94 @@ namespace Luma.Controllers
             return RedirectToAction("AllUsers", new { projectId = projectId });
         }
 
+        // GET: AdminUsers
+        [Authorize(Roles = "Admin")]
+        public IActionResult AdminUsers()
+        {
+            var adminRoleId = db.Roles.FirstOrDefault(r => r.Name == "Admin")?.Id;
+            if (adminRoleId == null)
+            {
+                return NotFound("Admin role doesn't exist.");
+            }
+
+            var currentUserId = _userManager.GetUserId(User);
+
+            var users = db.Users
+                          .Where(u => u.Id != currentUserId)
+                          .Select(u => new
+                          {
+                              User = u,
+                              IsAdmin = db.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == adminRoleId)
+                          })
+                          .ToList();
+
+            ViewBag.UsersWithAdminInfo = users;
+            return View();
+        }
+
+        // POST: Add Admin Role
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddAdmin(string userId)
+        {
+            var adminRole = db.Roles.FirstOrDefault(r => r.Name == "Admin");
+            if (adminRole == null)
+            {
+                return NotFound("Admin role doesn't exist.");
+            }
+
+            var userRole = new IdentityUserRole<string>
+            {
+                UserId = userId,
+                RoleId = adminRole.Id
+            };
+
+            db.UserRoles.Add(userRole);
+            db.SaveChanges();
+
+            return RedirectToAction("AdminUsers");
+        }
+
+        // POST: Remove Admin Role
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public IActionResult RemoveAdmin(string userId)
+        {
+            var adminRole = db.Roles.FirstOrDefault(r => r.Name == "Admin");
+            if (adminRole == null)
+            {
+                return NotFound("Admin role doesn't exist.");
+            }
+
+            var userRole = db.UserRoles.FirstOrDefault(ur => ur.UserId == userId && ur.RoleId == adminRole.Id);
+            if (userRole != null)
+            {
+                db.UserRoles.Remove(userRole);
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("AdminUsers");
+        }
+
+        // POST: Delete User
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteUser(string userId)
+        {
+            var user = db.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            db.Users.Remove(user);
+            db.SaveChanges();
+
+            return RedirectToAction("AdminUsers");
+        }
 
         // See if it has CRUD rights
         private void SetAccessRights(ProjectModel project)

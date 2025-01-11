@@ -1,0 +1,41 @@
+@model dynamic
+
+@{
+    ViewBag.Title = "Administer Users";
+    var usersWithAdminInfo = ViewBag.UsersWithAdminInfo;
+}
+
+<div id="admin-users-con">
+    <h1 class="page-title">Administer Users</h1>
+
+    <div class="users-list">
+        @foreach (var userInfo in usersWithAdminInfo)
+        {
+            <div class="user-card">
+                <div class="user-info">
+                    <p class="user-email">@userInfo.User.Email</p>
+                </div>
+
+                <div class="user-actions">
+                    @if (userInfo.IsAdmin)
+                    {
+                        <form method="post" asp-action="RemoveAdmin" asp-route-userId="@userInfo.User.Id" class="user-form">
+                            <button type="submit" class="btn btn-remove">Remove Admin</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form method="post" asp-action="AddAdmin" asp-route-userId="@userInfo.User.Id" class="user-form">
+                            <button type="submit" class="btn btn-add">Add Admin</button>
+                        </form>
+                    }
+                    <form method="post" asp-action="DeleteUser" asp-route-userId="@userInfo.User.Id" class="user-form">
+                        <button type="submit" class="btn btn-delete">Delete User</button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+
+    <a asp-controller="Projects" asp-action="Index" class="btn-back">Back to Projects</a>
+</div>

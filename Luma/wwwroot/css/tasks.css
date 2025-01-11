@@ -1,0 +1,132 @@
+#tasks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 0 1.5rem 0;
+  height: 100%;
+  width: 100%;
+}
+
+#top-tasks {
+  border-radius: 2rem;
+  height: 26%;
+  width: 85%;
+}
+
+#title-tasks {
+  background: linear-gradient(
+    145deg,
+    rgba(0, 0, 70, 1) -15%,
+    rgba(28, 181, 224, 1) 100%
+  );
+  border-top-left-radius: 2rem;
+  border-top-right-radius: 2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 1.2rem;
+  height: 60%;
+  width: 100%;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+}
+
+#title-tasks > div {
+  width: 35%;
+  display: flex;
+  justify-content: space-between;
+}
+
+#title-tasks > div > div {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  display: flex;
+}
+#title-tasks > div > div a,
+#title-tasks > div > div button {
+  background-color: rgba(255, 255, 255, 20%);
+  color: #fff;
+  border-radius: 2rem;
+  padding: 0.5rem 1rem;
+  margin-left: 2rem;
+  font-size: 1.2rem !important;
+}
+
+#title-tasks h1 {
+  font-size: 2.5rem;
+}
+
+#title-tasks p,
+#title-tasks div,
+#title-tasks form button {
+  font-size: 1.4rem;
+}
+
+#members-tasks {
+  background-color: var(--gray-color);
+  border-bottom-left-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  height: 40%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#members-tasks > div > a {
+  background-color: rgba(255, 255, 255, 20%);
+  color: #fff;
+  border-radius: 2rem;
+  padding: 0.5rem 1rem;
+  margin-left: 2rem;
+}
+
+#bottom-tasks {
+  height: 68%;
+  width: 85%;
+  display: flex;
+  justify-content: space-between;
+}
+
+#bottom-tasks > div {
+  overflow: hidden;
+  width: 28%;
+  border-radius: 2rem;
+  padding: 1.4rem 1.2rem 1.4rem 1.2rem;
+  background-color: var(--gray-color);
+}
+
+#tasks-title-col {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+#tasks-title-col a {
+  font-size: 2rem;
+}
+
+.draggable {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 20%);
+  border-radius: 1.2rem;
+  cursor: pointer;
+}
+
+.draggable h3,
+.draggable p {
+  padding: 0.2rem 0rem 0.2rem 0rem;
+}
+
+.dropzone {
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 10px;
+  padding-bottom: 2rem;
+}

@@ -134,3 +134,16 @@ button {
   color: #ffffff;
   font-weight: bold;
 }
+
+#access-denied {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#access-denied p {
+  margin-top: 1rem;
+}

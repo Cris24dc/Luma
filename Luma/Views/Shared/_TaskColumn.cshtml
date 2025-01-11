@@ -1,0 +1,25 @@
+﻿@model Tuple<string, string, IEnumerable<Luma.Models.Task>>
+
+<div>
+    <div id="tasks-title-col">
+        <h2>@Model.Item1</h2>
+        @if (ViewBag.ShowButtons)
+        {
+            <div>
+                <a asp-controller="Tasks" asp-action="New" asp-route-projectId="@ViewBag.ProjectId" asp-route-status="@Model.Item2">+</a>
+            </div>
+        }
+    </div>
+    <div class="dropzone" data-status="@Model.Item2" ondragover="allowDrop(event)" ondrop="drop(event)">
+        @foreach (var task in Model.Item3)
+        {
+            <div id="task-card-@task.Id" onclick="location.href='@Url.Action("Show", "Tasks", new { id = task.Id })'" class="draggable" draggable="true" ondragstart="drag(event)" data-id="@task.Id">
+                <div>
+                    <h3>@task.Title</h3>
+                    <p>@task.Description</p>
+                    <p>End: @task.End_Date</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>

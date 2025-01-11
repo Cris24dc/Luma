@@ -78,11 +78,20 @@ namespace Luma.Controllers
             // CRUD for organizer
             SetAccessRights(project);
 
-            // Tasks by Status
+            // Tasks by Status and ordered by End_Date
             var tasks = project.Tasks;
-            ViewBag.ToDoTasks = tasks.Where(t => t.Status == "To do").ToList();
-            ViewBag.InProgressTasks = tasks.Where(t => t.Status == "In progress").ToList();
-            ViewBag.DoneTasks = tasks.Where(t => t.Status == "Done").ToList();
+            ViewBag.ToDoTasks = tasks
+                .Where(t => t.Status == "To do")
+                .OrderBy(t => t.End_Date)
+                .ToList();
+            ViewBag.InProgressTasks = tasks
+                .Where(t => t.Status == "In progress")
+                .OrderBy(t => t.End_Date)
+                .ToList();
+            ViewBag.DoneTasks = tasks
+                .Where(t => t.Status == "Done")
+                .OrderBy(t => t.End_Date)
+                .ToList();
 
             return View(project);
         }
@@ -451,24 +460,27 @@ namespace Luma.Controllers
             }
         }
 
-        // POST: UpdateStatus
         [HttpPost]
-        [Authorize]
         [ValidateAntiForgeryToken]
-        public IActionResult UpdateStatus(int id, string status)
+        public IActionResult UpdateStatus([FromBody] UpdateStatusRequest request)
         {
-            var task = db.Tasks.Find(id);
+            var task = db.Tasks.Find(request.Id);
             if (task == null)
             {
                 return NotFound();
             }
 
-            task.Status = status;
+            task.Status = request.Status;
             db.Tasks.Update(task);
             db.SaveChanges();
 
-            return RedirectToAction("Show", new { id = task.Id });
+            return Ok();
         }
 
+        public class UpdateStatusRequest
+        {
+            public int Id { get; set; }
+            public string Status { get; set; }
+        }
     }
 }
