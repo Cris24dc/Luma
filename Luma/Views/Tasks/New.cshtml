@@ -4,41 +4,40 @@
     ViewData["Title"] = "Add New Task";
 }
 
-<h2>Add New Task</h2>
+<div id="new-task-con">
+    <h2 class="page-title">Add New Task</h2>
 
-<form asp-action="New" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
-    <input type="hidden" asp-for="ProjectId" />
-    <input type="hidden" asp-for="Status" />
+    <form asp-action="New" method="post" enctype="multipart/form-data" novalidate>
+        <input type="hidden" asp-for="ProjectId" />
+        <input type="hidden" asp-for="Status" />
 
-    <div class="form-group">
-        <label asp-for="Title" class="form-label"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="Title" class="form-label">Title</label>
+            <input asp-for="Title" class="form-input" />
+            <span asp-validation-for="Title" class="validation-message"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Description" class="form-label"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="Description" class="form-label">Description</label>
+            <textarea asp-for="Description" class="form-input"></textarea>
+            <span asp-validation-for="Description" class="validation-message"></span>
+        </div>
 
-    <input type="hidden" asp-for="Start_Date" value="@Model.Start_Date.ToString("yyyy-MM-ddTHH:mm:ss")" />
+        <div class="form-group">
+            <label asp-for="End_Date" class="form-label">End Date</label>
+            <input asp-for="End_Date" class="form-input" />
+            <span asp-validation-for="End_Date" class="validation-message"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="End_Date" class="form-label"></label>
-        <input asp-for="End_Date" class="form-control" />
-        <span asp-validation-for="End_Date" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="Media" class="form-label">Add Attachment</label>
+            <input asp-for="Media" type="file" class="form-input" />
+            <span asp-validation-for="Media" class="validation-message"></span>
+        </div>
 
-
-    <div class="form-group">
-        <label asp-for="Media">Add attachment</label>
-        <input asp-for="Media" class="form-control" type="file" />
-        <span asp-validation-for="Media" class="text-danger"></span>
-    </div>
-
-    <div class="d-flex justify-content-between">
-        <button type="submit" class="btn btn-primary mt-3">Add Task</button>
-        <a href="@Url.Action("Index", "Tasks", new { projectId = Model.ProjectId })" class="btn btn-secondary mt-3">Cancel</a>
-    </div>
-</form>
+        <div class="form-actions">
+            <button type="submit">Add Task</button>
+            <a href="@Url.Action("Index", "Tasks", new { projectId = Model.ProjectId })">Cancel</a>
+        </div>
+    </form>
+</div>

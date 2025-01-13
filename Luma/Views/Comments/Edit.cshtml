@@ -1,22 +1,22 @@
 ﻿@model Luma.Models.Comment
 
+@{
+    ViewBag.Title = "Edit Comment";
+}
 
-<h2>Edit comment</h2>
-<br />
+<div id="edit-comment-con">
+    <h2 class="page-title">Edit Comment</h2>
 
+    <form method="post" asp-action="Edit" asp-controller="Comments" asp-route-id="@Model.Id">
+        <div class="form-group">
+            <label asp-for="Text" class="form-label">Comment Text</label>
+            <textarea asp-for="Text" class="form-input"></textarea>
+            <span asp-validation-for="Text" class="validation-message"></span>
+        </div>
 
-<form asp-action="Edit" asp-controller="Comments" asp-route-id="@Model.Id" method="post">
-
-    <div class="form-group">
-        <label asp-for="Text" class="form-label">Comment text</label>
-        <br />
-        <textarea asp-for="Text" class="form-control"></textarea>
-        <span asp-validation-for="Text" class="text-danger"></span>
-    </div>
-
-    <br /><br />
-
-    <button class="btn btn-primary" type="submit">Edit comment</button>
-    <a class="btn btn-secondary" asp-controller="Tasks" asp-action="Show" asp-route-id="@ViewBag.TaskId">Cancel</a>
-</form>
-
+        <div class="form-actions">
+            <button type="submit">Modify Comment</button>
+            <a asp-controller="Tasks" asp-action="Show" asp-route-id="@ViewBag.TaskId">Cancel</a>
+        </div>
+    </form>
+</div>

@@ -4,42 +4,44 @@
     ViewData["Title"] = "Edit Task";
 }
 
-<h2>Edit Task</h2>
+<div id="edit-task-con">
+    <h2 class="page-title">Edit Task</h2>
 
-<form asp-action="Edit" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
-    <input type="hidden" asp-for="Id" />
-    <input type="hidden" asp-for="ProjectId" />
-    <input type="hidden" asp-for="Start_Date" />
-    <input type="hidden" asp-for="Status" />
-    <input type="hidden" asp-for="Media" />
+    <form asp-action="Edit" method="post" enctype="multipart/form-data" novalidate>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ProjectId" />
+        <input type="hidden" asp-for="Start_Date" />
+        <input type="hidden" asp-for="Status" />
+        <input type="hidden" asp-for="Media" />
 
-    <div class="form-group">
-        <label asp-for="Title" class="form-label"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="Title" class="form-label">Title</label>
+            <input asp-for="Title" class="form-input" />
+            <span asp-validation-for="Title" class="validation-message"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Description" class="form-label"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="Description" class="form-label">Description</label>
+            <textarea asp-for="Description" class="form-input"></textarea>
+            <span asp-validation-for="Description" class="validation-message"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="End_Date" class="form-label"></label>
-        <input asp-for="End_Date" class="form-control" />
-        <span asp-validation-for="End_Date" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="End_Date" class="form-label">End Date</label>
+            <input asp-for="End_Date" class="form-input" />
+            <span asp-validation-for="End_Date" class="validation-message"></span>
+        </div>
 
-    <div class="form-group">
+        <div class="form-group">
+            <label asp-for="Media" class="form-label">Upload Media</label>
+            <input type="file" name="newMedia" class="form-input" />
+            <span asp-validation-for="Media" class="validation-message"></span>
+            <button type="submit" name="removeMedia" value="true" class="btn btn-remove">Remove Media</button>
+        </div>
 
-        <label asp-for="Media" class="form-label">Upload Media</label>
-        <input type="file" name="newMedia" class="form-control" />
-        <span asp-validation-for="Media" class="text-danger"></span>
-        <button type="submit" class="btn btn-danger" name="removeMedia" value="true">Remove Media</button>
-    </div>
-
-
-    <button type="submit" class="btn btn-primary">Save Changes</button>
-    <a class="btn btn-secondary" asp-action="Show" asp-route-id="@Model.Id">Cancel</a>
-</form>
+        <div class="form-actions">
+            <button type="submit">Save Changes</button>
+            <a asp-action="Show" asp-route-id="@Model.Id">Cancel</a>
+        </div>
+    </form>
+</div>

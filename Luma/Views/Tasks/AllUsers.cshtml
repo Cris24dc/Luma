@@ -6,33 +6,34 @@
     var taskId = ViewBag.TaskId;
 }
 
-<h1>Manage Users for Task</h1>
+<div id="manage-task-users-con">
+    <h1 class="page-title">Manage Users for Task</h1>
 
-<div class="list-group">
-    @foreach (var userInfo in usersWithTaskInfo)
-    {
-        <div class="card mb-2 d-flex flex-row justify-content-between">
-            <div>
-                <p>@userInfo.User.Email</p>
-            </div>
+    <div class="users-list">
+        @foreach (var userInfo in usersWithTaskInfo)
+        {
+            <div class="user-card">
+                <div class="user-info">
+                    <p class="user-email">@userInfo.User.Email</p>
+                </div>
 
-            <div>
-                @if (userInfo.IsAssignedToTask)
-                {
-                    <form method="post" asp-action="RemoveUserFromTask" asp-route-taskId="@taskId" asp-route-userId="@userInfo.User.Id">
-                        <button type="submit" class="btn btn-danger">Remove</button>
-                    </form>
-                }
-                else
-                {
-                    <form method="post" asp-action="AddUserToTask" asp-route-taskId="@taskId" asp-route-userId="@userInfo.User.Id">
-                        <button type="submit" class="btn btn-primary">Add</button>
-                    </form>
-                }
+                <div class="user-actions">
+                    @if (userInfo.IsAssignedToTask)
+                    {
+                        <form method="post" asp-action="RemoveUserFromTask" asp-route-taskId="@taskId" asp-route-userId="@userInfo.User.Id" class="user-form">
+                            <button type="submit" class="btn btn-remove">Remove</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form method="post" asp-action="AddUserToTask" asp-route-taskId="@taskId" asp-route-userId="@userInfo.User.Id" class="user-form">
+                            <button type="submit" class="btn btn-add">Add</button>
+                        </form>
+                    }
+                </div>
             </div>
-        </div>
-    }
+        }
+    </div>
+
+    <a asp-controller="Tasks" asp-action="Show" asp-route-id="@taskId" class="btn-back">Back to Task</a>
 </div>
-
-<br />
-<a class="btn btn-primary mt-3" asp-controller="Tasks" asp-action="Show" asp-route-id="@taskId">Back to Task</a>
