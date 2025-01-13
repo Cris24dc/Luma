@@ -32,7 +32,7 @@
             {
                 @if (@Model.Media.Contains(".mp4") || @Model.Media.Contains(".mov"))
                 {
-                    <video controls>
+                    <video id="media-img" controls>
                         <source src="@Model.Media" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>

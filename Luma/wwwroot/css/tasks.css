@@ -184,7 +184,8 @@
 
 #media-img {
   border-radius: 0.5rem;
-  width: 22vw;
+  width: auto;
+  max-height: 160px;
   height: auto;
 }
 
