@@ -364,17 +364,41 @@ namespace Luma.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteUser(string userId)
         {
-            var user = db.Users.FirstOrDefault(u => u.Id == userId);
+            var user = db.Users
+                .Include(u => u.Comments)
+                .Include(u => u.Projects)
+                .Include(u => u.Tasks)
+                .FirstOrDefault(u => u.Id == userId);
+
             if (user == null)
             {
                 return NotFound("User not found.");
             }
 
+            if (user.Comments != null)
+            {
+                db.Comments.RemoveRange(user.Comments);
+            }
+
+            var projects = db.Projects.Where(p => p.Users.Any(u => u.Id == userId)).ToList();
+            foreach (var project in projects)
+            {
+                project.Users.Remove(user);
+            }
+
+            var tasks = db.Tasks.Where(t => t.Users.Any(u => u.Id == userId)).ToList();
+            foreach (var task in tasks)
+            {
+                task.Users.Remove(user);
+            }
+
             db.Users.Remove(user);
+
             db.SaveChanges();
 
             return RedirectToAction("AdminUsers");
         }
+
 
         // See if it has CRUD rights
         private void SetAccessRights(ProjectModel project)
