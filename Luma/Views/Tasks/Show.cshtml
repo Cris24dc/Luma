@@ -15,17 +15,17 @@
                 <p>Start Date: @Model.Start_Date.ToShortDateString()</p>
                 <p>End Date: @Model.End_Date.ToShortDateString()</p>
             </div>
-            @if (ViewBag.ShowButtons)
-            {
-                <div id="task-crud">
+            <div id="task-crud">
+                @if (ViewBag.ShowButtons)
+                {
                     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
 
                     <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
                         <button type="submit">Delete</button>
                     </form>
-                    <a asp-controller="Tasks" asp-action="Index" asp-route-projectId="@Model.ProjectId" class="back-link">Back to Project</a>
-                </div>
-            }
+                }
+                <a asp-controller="Tasks" asp-action="Index" asp-route-projectId="@Model.ProjectId" class="back-link">Back</a>
+            </div>
         </div>
         <div id="media-task">
             @if (@Model.Media != null)
@@ -76,12 +76,12 @@
         </div>
         <div id="members-task">
             <div>
-                <h2>Members:</h2>
+                <h2>Assigned Users:</h2>
                 @foreach (var userInfo in usersWithinTask)
                 {
                     @if (userInfo.IsAssignedToTask)
                     {
-                        <p>@userInfo.User.Email</p>
+                        <p style="margin: 1rem 0rem 1rem 0rem !important;">@userInfo.User.Email</p>
                     }
                 }
             </div>

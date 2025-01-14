@@ -115,8 +115,6 @@ namespace Luma.Controllers
                 End_Date = DateTime.Now.AddDays(1)
             };
 
-           
-
             return View(task);
         }
 

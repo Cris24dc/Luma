@@ -24,6 +24,12 @@
         </div>
 
         <div class="form-group">
+            <label asp-for="Start_Date" class="form-label">Start Date</label>
+            <input asp-for="Start_Date" class="form-input" />
+            <span asp-validation-for="Start_Date" class="validation-message"></span>
+        </div>
+
+        <div class="form-group">
             <label asp-for="End_Date" class="form-label">End Date</label>
             <input asp-for="End_Date" class="form-input" />
             <span asp-validation-for="End_Date" class="validation-message"></span>
