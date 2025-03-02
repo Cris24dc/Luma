@@ -1,4 +1,4 @@
-# Luma - Task Management Application
+# Luma - Task Management App
 
 <img src="./Images/Luma-Logo-img.png">
 
