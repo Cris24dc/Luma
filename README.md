@@ -1,34 +1,31 @@
 # **Luma - Task Management App**  
 
-<img src="./Images/Luma-Logo-img.png" width="50%">
+<img src="./Images/Luma-Logo-img.png" width="80%">
 
-Luma este o aplicație de gestionare a sarcinilor, inspirată de **Trello**, concepută pentru a facilita colaborarea în proiecte. Dezvoltată folosind **C# cu ASP.NET Core, Identity Framework, Entity Framework, MS SQL și Razor**, Luma oferă un sistem eficient de organizare a sarcinilor, urmând metodologiile **Agile**.
-
+Luma is a **Trello-inspired** task management application designed to enhance project collaboration. Built with **C# (ASP.NET Core), Identity Framework, Entity Framework, MS SQL, and Razor Pages**, Luma provides an efficient way to organize tasks while following **Agile methodologies**.
 
 ## **🚀 Features**  
 
 ### **👥 User Roles**  
-- **📌 Member** – Utilizator înregistrat cu acces la proiectele și sarcinile atribuite.  
-- **⚙️ Administrator** – Controlează întreaga platformă, gestionând utilizatori și setări.  
-- **📋 Organizer** – Creatorul unui proiect, responsabil pentru gestionarea echipei și a sarcinilor.  
+- **📌 Member** – A registered user with access to assigned projects and tasks.  
+- **⚙️ Administrator** – Has full control over the platform, including user management and settings.  
+- **📋 Organizer** – The creator of a project, responsible for managing team members, tasks, and assignments.  
 
 ### **📌 Project & Task Management**  
-✅ Creare și gestionare **proiecte multiple**  
-✅ Adăugare și eliminare **membri ai echipei** dintr-un proiect  
-✅ Organizare sarcini în **coloane dinamice** (_To Do, In Progress, Done_)  
-✅ **Drag & Drop** pentru mutarea sarcinilor între coloane  
-✅ Atribuire sarcini membrilor echipei  
-✅ Atașare **imagini și videoclipuri** la sarcini  
-✅ **Comentarii** pentru colaborare eficientă  
-
+✅ Create and manage **multiple projects**  
+✅ Add or remove **team members** from a project  
+✅ Organize tasks into **customizable columns** (_To Do, In Progress, Done_)  
+✅ **Drag & Drop** functionality for easy task management  
+✅ Assign tasks to specific team members  
+✅ Attach **images and videos** to tasks  
+✅ **Comment system** for seamless team collaboration  
 
 ## **🛠 Technologies Used**  
 
-- **Backend**: C# cu ASP.NET Core  
-- **Autentificare & Autorizare**: Identity Framework  
-- **Baza de date**: MS SQL + Entity Framework  
+- **Backend**: C# with ASP.NET Core  
+- **Authentication & Authorization**: Identity Framework  
+- **Database**: MS SQL + Entity Framework  
 - **Frontend**: Razor Pages  
-
 
 ## **📸 Screenshots & Demo**  
 
