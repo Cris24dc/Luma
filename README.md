@@ -1,43 +1,42 @@
-# Luma - Task Management App
+# **Luma - Task Management App**  
 
-<img src="./Images/Luma-Logo-img.png">
+<img src="./Images/Luma-Logo-img.png" width="50%">
 
-Luma is a task management application inspired by Trello, designed to streamline project collaboration. Built using **C# with ASP.NET, Identity Framework, Entity Framework, MS SQL, and Razor**, Luma facilitates task organization following Agile methodologies.
+Luma este o aplicație de gestionare a sarcinilor, inspirată de **Trello**, concepută pentru a facilita colaborarea în proiecte. Dezvoltată folosind **C# cu ASP.NET Core, Identity Framework, Entity Framework, MS SQL și Razor**, Luma oferă un sistem eficient de organizare a sarcinilor, urmând metodologiile **Agile**.
 
-## Features
 
-- **User Roles**:
+## **🚀 Features**  
 
-  - **Member**: A registered user with access to assigned projects and tasks.
-  - **Administrator**: Has full control over the platform, including managing users and settings.
-  - **Organizer**: The creator of a project, responsible for managing team members, tasks, and assignments.
+### **👥 User Roles**  
+- **📌 Member** – Utilizator înregistrat cu acces la proiectele și sarcinile atribuite.  
+- **⚙️ Administrator** – Controlează întreaga platformă, gestionând utilizatori și setări.  
+- **📋 Organizer** – Creatorul unui proiect, responsabil pentru gestionarea echipei și a sarcinilor.  
 
-- **Project & Task Management**:
-  - Create and manage multiple projects.
-  - Add and remove team members from a project.
-  - Organize tasks into columns (e.g., To Do, In Progress, Done) for Agile workflows.
-  - Move tasks between columns using drag and drop for intuitive task management.
-  - Assign tasks to specific team members.
-  - Attach **images and videos** to tasks as media resources.
-  - Add **comments** to tasks for seamless collaboration.
+### **📌 Project & Task Management**  
+✅ Creare și gestionare **proiecte multiple**  
+✅ Adăugare și eliminare **membri ai echipei** dintr-un proiect  
+✅ Organizare sarcini în **coloane dinamice** (_To Do, In Progress, Done_)  
+✅ **Drag & Drop** pentru mutarea sarcinilor între coloane  
+✅ Atribuire sarcini membrilor echipei  
+✅ Atașare **imagini și videoclipuri** la sarcini  
+✅ **Comentarii** pentru colaborare eficientă  
 
-## Technologies Used
 
-- **Backend**: C# with ASP.NET Core
-- **Authentication & Authorization**: Identity Framework
-- **Database**: MS SQL with Entity Framework
-- **Frontend**: Razor Pages
+## **🛠 Technologies Used**  
 
-## Screenshots & Demo
+- **Backend**: C# cu ASP.NET Core  
+- **Autentificare & Autorizare**: Identity Framework  
+- **Baza de date**: MS SQL + Entity Framework  
+- **Frontend**: Razor Pages  
 
-### Start Page:
 
-<img src="./Images/demo1.png">
+## **📸 Screenshots & Demo**  
 
-### Project Page:
+### **🏠 Start Page**  
+<img src="./Images/demo1.png" width="80%">  
 
-<img src="./Images/demo2.png">
+### **📂 Project Page**  
+<img src="./Images/demo2.png" width="80%">  
 
-### Task Page:
-
-<img src="./Images/demo3.png">
+### **📋 Task Page**  
+<img src="./Images/demo3.png" width="80%">  
